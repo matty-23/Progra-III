@@ -1,6 +1,6 @@
 import { Block } from './Block';
 
-export const Editor = ({ doc, onUpdate, onAddChild, onAddBlockBelow, onRemoveBlock, onIndentBlock, focusId }) => {
+export const Editor = ({ doc, onUpdate, onAddChild, onAddBlockBelow, onRemoveBlock, onIndentBlock,onUpdateMeta, focusId }) => {
   return (
     <div className="editor-container" style={{ 
       maxWidth: '800px', 
@@ -36,6 +36,7 @@ export const Editor = ({ doc, onUpdate, onAddChild, onAddBlockBelow, onRemoveBlo
             onRemoveBlock={onRemoveBlock}
             focusId={focusId}
             onIndentBlock={onIndentBlock}
+            onUpdateMeta={onUpdateMeta}
           />
         ))}
       </div>
