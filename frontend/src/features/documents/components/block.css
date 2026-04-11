@@ -1,0 +1,62 @@
+/* 🔹 CONTENEDOR GENERAL (Márgenes reducidos) */
+.block-container {
+  margin-left: 12px; /* Indentación mínima para hijos */
+  margin-bottom: 0px; /* Sin espacio extra entre bloques */
+}
+
+/* 🔹 EL BLOQUE EN SÍ */
+.block {
+  display: flex;
+  align-items: flex-start; /* Alinea al inicio si el texto crece */
+  gap: 4px;
+  padding: 1px 4px; /* Padding ultra compacto */
+  border-radius: 4px;
+  background: transparent;
+  /* Eliminamos transition para que sea instantáneo */
+}
+
+/* 👇 Solo se sombrea cuando estás escribiendo dentro */
+.block:focus-within {
+  background: rgba(0, 0, 0, 0.04); /* Un toque gris muy sutil */
+}
+
+/* 🔹 HANDLE (Puntitos) */
+.handle {
+  color: #ccc;
+  cursor: grab;
+  font-size: 14px;
+  padding-top: 4px;
+  user-select: none;
+}
+
+/* 🔹 TEXTAREA / INPUT */
+.block-input {
+  border: none;
+  outline: none;
+  resize: none;
+  width: 100%;
+  background: transparent;
+  
+  font-size: 15px;
+  line-height: 1.2; /* Espaciado entre líneas mínimo */
+  
+  padding: 2px 0;
+  min-height: 20px; /* Altura mínima reducida */
+  font-family: inherit;
+}
+
+/* 🔹 BOTÓN + (Sin hover, minimalista) */
+.add-btn {
+  opacity: 0.3; /* Menos intrusivo */
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  padding: 0 4px;
+  transition: opacity 0.2s;
+}
+
+/* Al quitar el hover del botón, solo se verá un poco más si el bloque tiene foco */
+.block:focus-within .add-btn {
+  opacity: 0.6;
+}
