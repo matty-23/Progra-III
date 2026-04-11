@@ -1,12 +1,22 @@
-
-import './App.css'; // Si tenés estilos globales
+import { useEffect, useState } from "react";
+import "./App.css";
 import DocumentPage from "./features/documents/DocumentPage.jsx";
+import arbolBloques from "./localStorage/arbolBloques.json";
 
 function App() {
+  const [documentId, setDocumentId] = useState("doc-1");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("documents");
+    if (!saved) {
+      localStorage.setItem("documents", JSON.stringify(arbolBloques));
+    }
+  }, []);
+
   return (
-    // Este div actúa como el fondo de toda tu pantalla
-    <div style={{ backgroundColor: '#f5f5f7', minHeight: '100vh' }}>
-      <DocumentPage />
+    <div style={{ backgroundColor: "#f5f5f7", minHeight: "100vh" }}>
+      <p>ID hardcodeado: {documentId}</p>
+      <DocumentPage defaultDocumentId={documentId} />
     </div>
   );
 }

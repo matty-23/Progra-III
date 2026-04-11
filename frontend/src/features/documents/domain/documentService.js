@@ -1,4 +1,4 @@
-// src/features/documents/services/documentService.js
+
 const KEY = 'doc';
 
 export const documentService = {
