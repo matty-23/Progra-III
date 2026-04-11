@@ -1,17 +1,14 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
-import Notification from "./components/notification.jsx";
+
+import './App.css'; // Si tenés estilos globales
+import DocumentPage from "./features/documents/DocumentPage.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
   return (
-    <div>
-      <Notification message="Hola, esto es una notificación!" />
+    // Este div actúa como el fondo de toda tu pantalla
+    <div style={{ backgroundColor: '#f5f5f7', minHeight: '100vh' }}>
+      <DocumentPage />
     </div>
   );
 }
 
-export default App
+export default App;
