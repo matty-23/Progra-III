@@ -1,0 +1,23 @@
+{
+  "name": "Progra-III",
+  "type": "folder",
+  "children": [
+    {
+      "name": "frontend",
+      "type": "folder",
+      "children": [
+        {
+          "name": "src",
+          "type": "folder",
+          "children": [
+            {
+              "name": "Documento 1",
+              "type": "document",
+              "documentId": "doc-1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

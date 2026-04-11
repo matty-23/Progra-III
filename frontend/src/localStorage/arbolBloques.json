@@ -1,0 +1,23 @@
+{
+  "documents": [
+    {
+      "id": "doc-1",
+      "title": "Documento 1",
+      "createdAt": "2026-04-11T00:00:00.000Z",
+      "blocks": [
+        {
+          "id": "block-1",
+          "type": "paragraph",
+          "content": "Texto del primer bloque",
+          "children": []
+        },
+        {
+          "id": "block-2",
+          "type": "heading",
+          "content": "Título del bloque",
+          "children": []
+        }
+      ]
+    }
+  ]
+}
