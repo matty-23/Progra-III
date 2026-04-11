@@ -10,7 +10,6 @@ export const Block = ({
 
   const handleChange = (e) => {
     onUpdate(block.id, e.target.value);
-    // autoResize solo aplica a textarea
     const el = inputRef.current;
     if (el?.tagName === 'TEXTAREA') {
       el.style.height = 'auto';
@@ -46,7 +45,6 @@ export const Block = ({
     <div className="block-container">
       <div className="block">
         <span className="handle">⠿</span>
-
         <BlockContent
           block={block}
           inputRef={inputRef}
@@ -54,7 +52,6 @@ export const Block = ({
           onKeyDown={handleKeyDown}
           onToggle={handleToggle}
         />
-
         <button onClick={() => onAddChild(block.id)} className="add-btn">+</button>
       </div>
 
