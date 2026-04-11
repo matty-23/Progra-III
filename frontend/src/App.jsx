@@ -1,21 +1,16 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import { useState } from "react";
 import DocumentPage from "./features/documents/DocumentPage.jsx";
-import arbolBloques from "./localStorage/arbolBloques.json";
+import documentsData from "./localStorage/arbolBloques.json";
+
+if (!localStorage.getItem("documents")) {
+  localStorage.setItem("documents", JSON.stringify(documentsData));
+}
 
 function App() {
-  const [documentId, setDocumentId] = useState("doc-1");
-
-  useEffect(() => {
-    const saved = localStorage.getItem("documents");
-    if (!saved) {
-      localStorage.setItem("documents", JSON.stringify(arbolBloques));
-    }
-  }, []);
+  const [documentId] = useState("doc-1");
 
   return (
     <div style={{ backgroundColor: "#f5f5f7", minHeight: "100vh" }}>
-      <p>ID hardcodeado: {documentId}</p>
       <DocumentPage defaultDocumentId={documentId} />
     </div>
   );

@@ -3,27 +3,26 @@ import { createBlock, BLOCK_TYPES } from '../models/blockModel';
 import { documentService } from '../domain/documentService';
 
 const DOC_INICIAL = {
+    id: 'doc-new',
     title: 'Mi Documento',
-    blocks: [
-        createBlock(BLOCK_TYPES.PARAGRAPH, '¡Bienvenida al editor!'),
-    ],
+    blocks: [createBlock(BLOCK_TYPES.PARAGRAPH, '¡Bienvenida al editor!')],
 };
 
-export const useDocument = () => {
+export const useDocument = (documentId) => {        // 👈 recibe el id
     const [doc, setDoc] = useState(
-        () => documentService.load() ?? DOC_INICIAL    // 👈 carga al montar
+        () => documentService.loadById(documentId) ?? DOC_INICIAL
     );
     const [focusId, setFocusId] = useState(null);
 
     useEffect(() => {
-        documentService.save(doc);                     // 👈 guarda cada vez que cambia
+        documentService.save(doc);
     }, [doc]);
 
 
     // — helpers recursivos —
     const mapBlocks = (blocks, fn) => blocks.map(block => ({
         ...fn(block),
-        children: mapBlocks(block.children, fn),
+        children: mapBlocks(block.children ?? [], fn),  // 👈 ?? []
     }));
 
     const updateContent = (id, newContent) => {
