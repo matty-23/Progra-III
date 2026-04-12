@@ -1,4 +1,6 @@
-export default function Sidebar() {
+import SectionButton from "./SectionButton";
+
+export default function Sidebar({sections={}}) {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
@@ -14,6 +16,7 @@ export default function Sidebar() {
         <p>👥 Compartidos</p>
         <p>🕒 Recientes</p>
         <p>⭐ Destacados</p>
+        <SectionButton section={{name: 'Documentos', icon: '📄'}} isActive={false} onClick={() => {}} />
       </nav>
 
       <div className="sidebar-footer">

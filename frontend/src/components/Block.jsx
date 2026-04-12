@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from 'react';
-import { BlockContent } from './BlockContent.jsx';
 import './Block.css';
 
 export const Block = ({
