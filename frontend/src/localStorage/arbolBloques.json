@@ -18,6 +18,45 @@
           "children": []
         }
       ]
+    },
+    {
+      "id": "doc-2",
+      "title": "App.jsx",
+      "createdAt": "2026-04-11T00:00:00.000Z",
+      "blocks": [
+        {
+          "id": "block-3",
+          "type": "paragraph",
+          "content": "Documento inicial para App.jsx",
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "doc-3",
+      "title": "package.json",
+      "createdAt": "2026-04-11T00:00:00.000Z",
+      "blocks": [
+        {
+          "id": "block-4",
+          "type": "paragraph",
+          "content": "Documento inicial para package.json",
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "doc-4",
+      "title": "server.js",
+      "createdAt": "2026-04-11T00:00:00.000Z",
+      "blocks": [
+        {
+          "id": "block-5",
+          "type": "paragraph",
+          "content": "Documento inicial para server.js",
+          "children": []
+        }
+      ]
     }
   ]
 }

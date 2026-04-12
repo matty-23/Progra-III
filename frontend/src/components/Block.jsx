@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import './Block.css';
-
+import BlockContent from './BlockContent.jsx';
 export const Block = ({
   block, onUpdate, onUpdateMeta,
   onAddChild, onAddBlockBelow, onRemoveBlock, onSelect ,isSelected, onIndentBlock, focusId,

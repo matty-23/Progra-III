@@ -12,7 +12,7 @@ const applyList = (type, selectedBlock, onChangeType) => {
   const newType = selectedBlock.type === type ? 'paragraph' : type;
   onChangeType(selectedBlock.id, newType);
 };
-export const Toolbar = ({ selectedBlock, onChangeType, onUpdateMeta }) => {
+const Toolbar = ({ selectedBlock, onChangeType, onUpdateMeta }) => {
 
   return (
     <div
@@ -148,3 +148,4 @@ export const Toolbar = ({ selectedBlock, onChangeType, onUpdateMeta }) => {
   );
 
 };
+export default Toolbar;
