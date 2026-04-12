@@ -5,9 +5,11 @@ import heroImg from './assets/hero.png'
 import './App.css'
 import Notification from "./components/notification.jsx";
 import PageInicio from "./pages/pageInicio.jsx";
+import PageDocument from "./pages/PageDocument.jsx";
 
 export default function App() {
     return (
-        <PageInicio />
+        <PageDocument />
     )
 }
+

@@ -1,6 +1,15 @@
 import { useState, useEffect } from 'react';
 import { createBlock, BLOCK_TYPES } from '../models/blockModel';
 import { documentService } from '../domain/documentService';
+import {
+    updateBlock,
+    insertAfter,
+    insertAsChild,
+    removeBlock as removeBlockFn,
+    removeBlockWithFocus,
+    flattenTree,
+    indentBlock as indentBlockFn,
+} from '../utils/Utiles';
 
 const DOC_INICIAL = {
     id: 'doc-new',
@@ -18,94 +27,62 @@ export const useDocument = (documentId) => {        // 👈 recibe el id
         documentService.save(doc);
     }, [doc]);
 
-
-    // — helpers recursivos —
-    const mapBlocks = (blocks, fn) => blocks.map(block => ({
-        ...fn(block),
-        children: mapBlocks(block.children ?? [], fn),  // 👈 ?? []
-    }));
-
-    // Ya funciona igual, content ahora guarda HTML como "<strong>hola</strong>"
     const updateContent = (id, newContent) => {
         setDoc(prev => ({
             ...prev,
-            blocks: mapBlocks(prev.blocks, block =>
-                block.id === id ? { ...block, content: newContent } : block
-            ),
+            blocks: updateBlock(prev.blocks, id, { content: newContent }),
         }));
     };
 
-    // Nuevo: actualiza metadata (checked, color, etc.)
+
     const updateMeta = (id, patch) => {
-        setDoc(prev => ({
-            ...prev,
-            blocks: mapBlocks(prev.blocks, block =>
-                block.id === id
-                    ? { ...block, metadata: { ...block.metadata, ...patch } }
-                    : block
-            ),
-        }));
+         if (id === 'title') {
+            setDoc(prev => ({ ...prev, title: patch.title }));
+            return;
+        }
+        
+        setDoc(prev => {
+            const block = flattenTree(prev.blocks).find(b => b.id === id);
+            if (!block) return prev;
+            return {
+                ...prev,
+                blocks: updateBlock(prev.blocks, id, {
+                    metadata: { ... (block.metadata ?? {}), ...patch },
+                }),
+            };
+        });
     };
 
     const addChild = (parentId) => {
         const newBlock = createBlock();
-        const addRecursive = (blocks) => blocks.map(block => {
-            if (block.id === parentId) return { ...block, children: [...block.children, newBlock] };
-            return { ...block, children: addRecursive(block.children) };
-        });
-        setDoc(prev => ({ ...prev, blocks: addRecursive(prev.blocks) }));
+        setDoc(prev => ({ ...prev, blocks: insertAsChild(prev.blocks, parentId, newBlock,) }));
     };
 
     const addBlockBelow = (id) => {
         const newBlock = createBlock();
-        const insertRecursive = (blocks) =>
-            blocks.flatMap(block => {
-                if (block.id === id) return [block, newBlock];
-                return [{ ...block, children: insertRecursive(block.children) }];
-            });
-        setDoc(prev => ({ ...prev, blocks: insertRecursive(prev.blocks) }));
+        setDoc(prev => ({ ...prev, blocks: insertAfter(prev.blocks, id, newBlock) }));
         setFocusId(newBlock.id);
     };
 
     const removeBlock = (id) => {
         if (doc.blocks[0]?.id === id) return;
-        const flatten = (blocks) =>
-            blocks.flatMap(b => [b, ...flatten(b.children)]);
-        const flat = flatten(doc.blocks);
-        const prev = flat[flat.findIndex(b => b.id === id) - 1];
-        const removeRecursive = (blocks) =>
-            blocks
-                .filter(b => b.id !== id)
-                .map(b => ({ ...b, children: removeRecursive(b.children) }));
-        setDoc(prev => ({ ...prev, blocks: removeRecursive(prev.blocks) }));
-        if (prev) setFocusId(prev.id);
+        
+        const { blocks: updatedBlocks, focusId: newFocusId } = removeBlockWithFocus(doc.blocks, id);
+        setDoc(prev => ({ ...prev, blocks: updatedBlocks }));
+        if (newFocusId) setFocusId(newFocusId);
     };
 
     const indentBlock = (id) => {
-        let moved = null;
-        const process = (blocks) => {
-            const result = [];
-            for (let i = 0; i < blocks.length; i++) {
-                const block = blocks[i];
-                if (block.id === id) {
-                    moved = block;
-                    if (i > 0) result[result.length - 1].children.push(moved);
-                    else result.push(block);
-                    continue;
-                }
-                result.push({ ...block, children: process(block.children) });
-            }
-            return result;
-        };
-        setDoc(prev => ({ ...prev, blocks: process(prev.blocks) }));
-        if (moved) setFocusId(moved.id);
+        setDoc(prev => ({
+            ...prev,
+            blocks: indentBlockFn(prev.blocks, id),
+        }));
+        setFocusId(id);
     };
     const changeType = (id, newType) => {
         setDoc(prev => ({
             ...prev,
-            blocks: mapBlocks(prev.blocks, block =>
-                block.id === id ? { ...block, type: newType } : block
-            ),
+            blocks: updateBlock(prev.blocks, id, { type: newType }),
         }));
     };
 
