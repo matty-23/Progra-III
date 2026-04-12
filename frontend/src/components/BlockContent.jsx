@@ -39,7 +39,7 @@ const BASE_STYLE = {
   caretColor: '#6b6860',
 };
 
-export const BlockContent = ({ block, inputRef, onKeyDown, onFocus, onBlur }) => {
+ const BlockContent = ({ block, inputRef, onKeyDown, onFocus, onBlur }) => {
   // Sincroniza el contenido cuando cambia externamente
    useEffect(() => {
     const el = inputRef.current;
@@ -137,3 +137,4 @@ export const BlockContent = ({ block, inputRef, onKeyDown, onFocus, onBlur }) =>
     />
   );
 };
+export default BlockContent;
