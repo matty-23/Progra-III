@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { BlockContent } from './blockContent.jsx';
+import { BlockContent } from './BlockContent.jsx';
 import './Block.css';
 
 export const Block = ({
@@ -19,7 +19,10 @@ export const Block = ({
   const handleKeyDown = (e) => {
     if (e.key === 'Tab') { e.preventDefault(); onIndentBlock(block.id); }
     if (e.key === 'Enter') { e.preventDefault(); onAddBlockBelow(block.id); }
-    if (e.key === 'Backspace' && block.content === '') {
+    
+    // Detectar contenido vacío: '' o solo tags HTML vacíos
+    const isEmpty = block.content === '' || block.content === '<br>' || block.content?.trim() === '';
+    if (e.key === 'Backspace' && isEmpty) {
       e.preventDefault(); onRemoveBlock(block.id);
     }
   };

@@ -7,7 +7,6 @@ const DocumentPage = ({ defaultDocumentId }) => {
   const [selectedBlock, setSelectBlock] = useState(null);
   const lastSelectedRef = useRef(null);
 
-  // 👈 useDocument PRIMERO, antes de usarlo en los handlers
   const { doc, updateContent, addChild, addBlockBelow, changeType, removeBlock, indentBlock, updateMeta, focusId } =
     useDocument(defaultDocumentId);
 

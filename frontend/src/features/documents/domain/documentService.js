@@ -15,10 +15,13 @@ export const documentService = {
     const doc = data?.documents?.find(d => d.id === id) ?? null;
     if (!doc) return null;
 
-    // Asegura que cada bloque tenga children
     const normalize = (blocks) =>
       blocks.map(b => ({
-        ...b,
+        id: b.id,
+        type: b.type ?? 'paragraph',
+        content: b.content ?? '',
+        align: b.align ?? 'left',
+        metadata: b.metadata ?? {},
         children: normalize(b.children ?? []),
       }));
 

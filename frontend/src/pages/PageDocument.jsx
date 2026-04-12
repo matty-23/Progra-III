@@ -1,6 +1,6 @@
 import { useState } from "react";
-import DocumentPage from "./features/documents/DocumentPage.jsx";
-import documentsData from "./localStorage/arbolBloques.json";
+import DocumentPage from "../features/documents/DocumentPage.jsx";
+import documentsData from "../localStorage/arbolBloques.json";
 
 if (!localStorage.getItem("documents")) {
   localStorage.setItem("documents", JSON.stringify(documentsData));
