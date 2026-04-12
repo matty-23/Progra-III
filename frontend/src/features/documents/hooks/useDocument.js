@@ -1,200 +1,90 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createBlock, BLOCK_TYPES } from '../models/blockModel';
+import { documentService } from '../domain/documentService';
+import {
+    updateBlock,
+    insertAfter,
+    insertAsChild,
+    removeBlock as removeBlockFn,
+    removeBlockWithFocus,
+    flattenTree,
+    indentBlock as indentBlockFn,
+} from '../utils/Utiles';
 
-export const useDocument = () => {
-    // 1. Estado inicial
-    const [doc, setDoc] = useState({
-        title: 'Mi Documento de Ingeniería',
-        blocks: [
-            { id: '1', content: '¡Bienvenida al editor!', children: [] }
-        ]
-    });
+const DOC_INICIAL = {
+    id: 'doc-new',
+    title: 'Mi Documento',
+    blocks: [createBlock(BLOCK_TYPES.PARAGRAPH, '¡Bienvenida al editor!')],
+};
 
-    // 2. Función para actualizar contenido (Recursiva)
-    const updateContent = (id, newContent) => {
-        const updateRecursive = (blocks) => {
-            return blocks.map(block => {
-                if (block.id === id) {
-                    return { ...block, content: newContent };
-                }
-                if (block.children.length > 0) {
-                    return { ...block, children: updateRecursive(block.children) };
-                }
-                return block;
-            });
-        };
-
-        setDoc(prev => ({
-            ...prev,
-            blocks: updateRecursive(prev.blocks)
-        }));
-    };
-
-    // 3. Función para añadir un HIJO (Recursiva)
-    const addChild = (parentId) => {
-        const addChildRecursive = (blocks) => {
-            return blocks.map(block => {
-                if (block.id === parentId) {
-                    const newChild = {
-                        id: crypto.randomUUID(),
-                        content: '',
-                        children: []
-                    };
-                    return { ...block, children: [...block.children, newChild] };
-                }
-                if (block.children.length > 0) {
-                    return { ...block, children: addChildRecursive(block.children) };
-                }
-                return block;
-            });
-        };
-
-        setDoc(prev => ({
-            ...prev,
-            blocks: addChildRecursive(prev.blocks)
-        }));
-    };
-
+export const useDocument = (documentId) => {        // 👈 recibe el id
+    const [doc, setDoc] = useState(
+        () => documentService.loadById(documentId) ?? DOC_INICIAL
+    );
     const [focusId, setFocusId] = useState(null);
-    // 4. Función para añadir bloque PRINCIPAL (Esta estaba afuera, ahora está ADENTRO)
-    const addMainBlock = () => {
-        const newBlock = {
-            id: crypto.randomUUID(),
-            content: '',
-            children: []
-        };
 
+    useEffect(() => {
+        documentService.save(doc);
+    }, [doc]);
+
+    const updateContent = (id, newContent) => {
         setDoc(prev => ({
             ...prev,
-            blocks: [...prev.blocks, newBlock]
+            blocks: updateBlock(prev.blocks, id, { content: newContent }),
         }));
     };
-    const indentBlock = (id) => {
-        let movedBlock = null;
 
-        const process = (blocks) => {
-            let result = [];
 
-            for (let i = 0; i < blocks.length; i++) {
-                const block = blocks[i];
-
-                if (block.id === id) {
-                    movedBlock = block;
-
-                    // 👉 si hay anterior → lo hacemos hijo
-                    if (i > 0) {
-                        const prev = result[result.length - 1];
-                        prev.children = [...prev.children, movedBlock];
-                    } else {
-                        // si no hay anterior, lo dejamos igual
-                        result.push(block);
-                    }
-
-                    continue;
-                }
-
-                result.push({
-                    ...block,
-                    children: process(block.children)
-                });
-            }
-
-            return result;
-        };
-
-        setDoc(prev => ({
-            ...prev,
-            blocks: process(prev.blocks)
-        }));
-
-        if (movedBlock) {
-            setFocusId(movedBlock.id);
-        }
-    };
-    const addBlockBelow = (id) => {
-        const newId = crypto.randomUUID();
-
-        const newBlock = {
-            id: newId,
-            content: '',
-            children: []
-        };
-
-        const insertRecursive = (blocks) => {
-            return blocks.flatMap(block => {
-                if (block.id === id) {
-                    return [block, newBlock];
-                }
-
-                if (block.children.length > 0) {
-                    return [{
-                        ...block,
-                        children: insertRecursive(block.children)
-                    }];
-                }
-
-                return [block];
-            });
-        };
-
-        setDoc(prev => ({
-            ...prev,
-            blocks: insertRecursive(prev.blocks)
-        }));
-
-        setFocusId(newId); // 👈 ESTE ES EL SECRETO
-    };
-    const removeBlock = (id) => {
-        // 👉 si es el primer bloque, NO hacer nada
-        if (doc.blocks.length > 0 && doc.blocks[0].id === id) {
+    const updateMeta = (id, patch) => {
+         if (id === 'title') {
+            setDoc(prev => ({ ...prev, title: patch.title }));
             return;
         }
+        
+        setDoc(prev => {
+            const block = flattenTree(prev.blocks).find(b => b.id === id);
+            if (!block) return prev;
+            return {
+                ...prev,
+                blocks: updateBlock(prev.blocks, id, {
+                    metadata: { ... (block.metadata ?? {}), ...patch },
+                }),
+            };
+        });
+    };
 
-        // 🔽 el resto queda igual
-        const flatten = (blocks) => {
-            let result = [];
+    const addChild = (parentId) => {
+        const newBlock = createBlock();
+        setDoc(prev => ({ ...prev, blocks: insertAsChild(prev.blocks, parentId, newBlock,) }));
+    };
 
-            for (const block of blocks) {
-                result.push(block);
-                if (block.children.length > 0) {
-                    result = result.concat(flatten(block.children));
-                }
-            }
+    const addBlockBelow = (id) => {
+        const newBlock = createBlock();
+        setDoc(prev => ({ ...prev, blocks: insertAfter(prev.blocks, id, newBlock) }));
+        setFocusId(newBlock.id);
+    };
 
-            return result;
-        };
+    const removeBlock = (id) => {
+        if (doc.blocks[0]?.id === id) return;
+        
+        const { blocks: updatedBlocks, focusId: newFocusId } = removeBlockWithFocus(doc.blocks, id);
+        setDoc(prev => ({ ...prev, blocks: updatedBlocks }));
+        if (newFocusId) setFocusId(newFocusId);
+    };
 
-        const flatBlocks = flatten(doc.blocks);
-        const index = flatBlocks.findIndex(b => b.id === id);
-        const prevBlock = index > 0 ? flatBlocks[index - 1] : null;
-
-        const removeRecursive = (blocks) => {
-            return blocks
-                .filter(block => block.id !== id)
-                .map(block => ({
-                    ...block,
-                    children: removeRecursive(block.children)
-                }));
-        };
-
+    const indentBlock = (id) => {
         setDoc(prev => ({
             ...prev,
-            blocks: removeRecursive(prev.blocks)
+            blocks: indentBlockFn(prev.blocks, id),
         }));
-
-        if (prevBlock) {
-            setFocusId(prevBlock.id);
-        }
+        setFocusId(id);
+    };
+    const changeType = (id, newType) => {
+        setDoc(prev => ({
+            ...prev,
+            blocks: updateBlock(prev.blocks, id, { type: newType }),
+        }));
     };
 
-    // 5. Retorno de todas las funciones (Único return del Hook)
-    return {
-        doc,
-        updateContent,
-        addChild,
-        addMainBlock,
-        addBlockBelow,
-        removeBlock,
-        indentBlock,
-        focusId
-    };
+    return { doc, updateContent, updateMeta, addChild, addBlockBelow, changeType, removeBlock, indentBlock, focusId };
 };

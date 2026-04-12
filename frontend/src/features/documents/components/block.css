@@ -1,62 +1,219 @@
-/* 🔹 CONTENEDOR GENERAL (Márgenes reducidos) */
-.block-container {
-  margin-left: 12px; /* Indentación mínima para hijos */
-  margin-bottom: 0px; /* Sin espacio extra entre bloques */
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+/* — Editor wrapper — */
+.editor-wrapper {
+  min-height: 100vh;
+  padding: 60px 24px;
+  background: #f7f6f3;
 }
 
-/* 🔹 EL BLOQUE EN SÍ */
+.editor-container {
+  max-width: 720px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 56px 72px 80px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.04);
+}
+
+/* — Título — */
+.editor-title {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 2.6rem;
+  font-weight: 600;
+  color: #1a1a18;
+  border: none;
+  outline: none;
+  width: 100%;
+  background: transparent;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+}
+
+.editor-title::placeholder { color: #c8c6be; }
+
+.editor-meta {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: #aaa89e;
+  text-transform: capitalize;
+  letter-spacing: 0.03em;
+  margin-bottom: 32px;
+}
+
+.editor-divider {
+  height: 1px;
+  background: linear-gradient(to right, #e8e6e0, transparent);
+  margin-bottom: 36px;
+}
+
+/* — Botón agregar raíz — */
+.add-root-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 28px;
+  padding: 8px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #b5b3ab;
+  background: none;
+  border: 1.5px dashed #dedad3;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  justify-content: center;
+}
+
+.add-root-btn:hover {
+  color: #6b6860;
+  border-color: #c8c6be;
+  background: #faf9f7;
+}
+
+.add-root-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* — Bloque — */
+.block-container {
+  position: relative;
+  margin-bottom: 2px;
+} 
+
 .block {
   display: flex;
-  align-items: flex-start; /* Alinea al inicio si el texto crece */
-  gap: 4px;
-  padding: 1px 4px; /* Padding ultra compacto */
-  border-radius: 4px;
-  background: transparent;
-  /* Eliminamos transition para que sea instantáneo */
+  align-items: flex-start;
+  gap: 6px;
+  padding: 2px 0;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+  group: true;
 }
 
-/* 👇 Solo se sombrea cuando estás escribiendo dentro */
-.block:focus-within {
-  background: rgba(0, 0, 0, 0.04); /* Un toque gris muy sutil */
-}
+.block:hover { background: #faf9f7; }
 
-/* 🔹 HANDLE (Puntitos) */
+/* — Handle — */
 .handle {
-  color: #ccc;
-  cursor: grab;
   font-size: 14px;
-  padding-top: 4px;
+  color: transparent;
+  cursor: grab;
+  padding: 3px 2px;
+  margin-top: 2px;
+  border-radius: 4px;
+  transition: color 0.15s ease, background 0.15s ease;
+  flex-shrink: 0;
+  line-height: 1.5;
   user-select: none;
 }
 
-/* 🔹 TEXTAREA / INPUT */
+.block:hover .handle {
+  color: #c8c6be;
+}
+
+.handle:hover {
+  color: #888680 !important;
+  background: #efede8;
+}
+
+/* — Botón agregar hijo — */
+.add-btn {
+  font-size: 14px;
+  color: transparent;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  line-height: 1.5;
+  margin-top: 2px;
+  transition: all 0.15s ease;
+}
+
+.block:hover .add-btn {
+  color: #c8c6be;
+}
+
+.add-btn:hover {
+  color: #888680 !important;
+  background: #efede8;
+}
+
+/* — Hijos indentados — */
+.block-children {
+  padding-left: 28px;
+  border-left: 2px solid #f0ede8;
+  margin-left: 14px;
+  margin-top: 2px;
+}
+
+/* — Tipos de bloque — */
 .block-input {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.975rem;
+  font-weight: 400;
+  color: #2d2c2a;
+  line-height: 1.7;
   border: none;
   outline: none;
-  resize: none;
   width: 100%;
   background: transparent;
-  
-  font-size: 15px;
-  line-height: 1.2; /* Espaciado entre líneas mínimo */
-  
-  padding: 2px 0;
-  min-height: 20px; /* Altura mínima reducida */
-  font-family: inherit;
+  resize: none;
+  overflow: hidden;
+  min-height: 28px;
+  caret-color: #6b6860;
 }
 
-/* 🔹 BOTÓN + (Sin hover, minimalista) */
-.add-btn {
-  opacity: 0.3; /* Menos intrusivo */
+.block-input::placeholder { color: #d0cec8; }
+
+/* heading */
+.block-heading {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #1a1a18;
+  letter-spacing: -0.015em;
+  line-height: 1.4;
+  padding-top: 12px;
+}
+
+/* todo */
+.block-todo-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding-top: 2px;
+}
+
+.block-checkbox {
+  width: 16px;
+  height: 16px;
+  margin-top: 5px;
+  accent-color: #6b6860;
+  flex-shrink: 0;
   cursor: pointer;
-  border: none;
-  background: transparent;
-  font-size: 16px;
-  padding: 0 4px;
-  transition: opacity 0.2s;
 }
 
-/* Al quitar el hover del botón, solo se verá un poco más si el bloque tiene foco */
-.block:focus-within .add-btn {
-  opacity: 0.6;
+.block-todo-checked {
+  color: #b5b3ab;
+  text-decoration: line-through;
+}
+
+/* quote */
+.block-quote {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: #6b6860;
+  border-left: 3px solid #e8e4dc;
+  padding-left: 16px;
+  margin-left: 4px;
+  
 }
