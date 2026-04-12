@@ -1,6 +1,6 @@
 import { Editor } from './components/editor.jsx';
 import { Toolbar } from './components/Toolbar.jsx';
-import { useDocument } from './hooks/useDocument';
+import { useDocument } from '../hooks/useDocument.js';
 import { useRef, useState } from 'react';
 
 const DocumentPage = ({ defaultDocumentId }) => {

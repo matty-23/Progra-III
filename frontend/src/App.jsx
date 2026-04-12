@@ -9,7 +9,7 @@ import PageDocument from "./pages/PageDocument.jsx";
 
 export default function App() {
     return (
-        <PageDocument />
+        <PageInicio />
     )
 }
 
