@@ -1,6 +1,7 @@
 import SectionButton from "./SectionButton";
+import SECTIONS from "../models/sectionModel";
 
-export default function Sidebar({sections={}}) {
+export default function Sidebar({sections}) {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
@@ -12,11 +13,10 @@ export default function Sidebar({sections={}}) {
       </div>
 
       <nav>
-        <p className="active">📁 Archivo principal</p>
-        <p>👥 Compartidos</p>
-        <p>🕒 Recientes</p>
-        <p>⭐ Destacados</p>
-        <SectionButton section={{name: 'Documentos', icon: '📄'}} isActive={false} onClick={() => {}} />
+        <SectionButton section={SECTIONS[0]} isActive={true} onClick={() => {}} />
+        <SectionButton section={SECTIONS[2]} isActive={false} onClick={() => {}} />
+        <SectionButton section={SECTIONS[1]} isActive={false} onClick={() => {}} />
+        <SectionButton section={SECTIONS[3]} isActive={false} onClick={() => {}} />
       </nav>
 
       <div className="sidebar-footer">

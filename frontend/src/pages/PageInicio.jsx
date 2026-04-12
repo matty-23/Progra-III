@@ -5,6 +5,7 @@ import Header from "../components/Header.jsx";
 import FileGrid from "../components/FileGrid.jsx";
 import Route from "../components/Route.jsx";     
 import ReadMe from "../components/ReadMe.jsx";
+
 export default function PageInicio() {
     const [filesData, setFilesData] = useState(null);
 
