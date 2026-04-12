@@ -1,0 +1,37 @@
+/* App.css o Route.css */
+.route {
+  padding: 0.6rem 1rem;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+  color: #4b5563;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.route-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.breadcrumb-segment {
+  color: #3b82f6;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.breadcrumb-segment:last-child {
+  color: #111827;
+  cursor: default;
+  font-weight: 600;
+}
+
+.breadcrumb-segment:hover {
+  text-decoration: underline;
+}
