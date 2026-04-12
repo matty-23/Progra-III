@@ -25,6 +25,7 @@ export const useDocument = (documentId) => {        // 👈 recibe el id
         children: mapBlocks(block.children ?? [], fn),  // 👈 ?? []
     }));
 
+    // Ya funciona igual, content ahora guarda HTML como "<strong>hola</strong>"
     const updateContent = (id, newContent) => {
         setDoc(prev => ({
             ...prev,
@@ -99,6 +100,14 @@ export const useDocument = (documentId) => {        // 👈 recibe el id
         setDoc(prev => ({ ...prev, blocks: process(prev.blocks) }));
         if (moved) setFocusId(moved.id);
     };
+    const changeType = (id, newType) => {
+        setDoc(prev => ({
+            ...prev,
+            blocks: mapBlocks(prev.blocks, block =>
+                block.id === id ? { ...block, type: newType } : block
+            ),
+        }));
+    };
 
-    return { doc, updateContent, updateMeta, addChild, addBlockBelow, removeBlock, indentBlock, focusId };
+    return { doc, updateContent, updateMeta, addChild, addBlockBelow, changeType, removeBlock, indentBlock, focusId };
 };

@@ -1,7 +1,7 @@
 import { Block } from './Block';
 import { Toolbar } from './Toolbar';
 
-export const Editor = ({ doc, onUpdate, onAddChild, onAddBlockBelow, onRemoveBlock, onIndentBlock, onUpdateMeta, focusId }) => {
+export const Editor = ({ doc, onUpdate, onSelectBlock,selectedBlock, onAddChild, onAddBlockBelow, onRemoveBlock, onIndentBlock, onUpdateMeta, focusId }) => {
   return (
     <div className="editor-wrapper">
       <div className="editor-container">
@@ -32,6 +32,8 @@ export const Editor = ({ doc, onUpdate, onAddChild, onAddBlockBelow, onRemoveBlo
               focusId={focusId}
               onIndentBlock={onIndentBlock}
               onUpdateMeta={onUpdateMeta}
+              isSelected={selectedBlock?.id === block.id}
+              onSelect={onSelectBlock}
             />
           ))}
         </div>

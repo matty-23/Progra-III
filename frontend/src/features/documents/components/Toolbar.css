@@ -16,6 +16,7 @@
   flex-wrap: wrap;
 }
 
+.tb-btn-text.underline { text-decoration: underline; }
 .toolbar-group { display: flex; gap: 1px; align-items: center; }
 
 .tb-sep {

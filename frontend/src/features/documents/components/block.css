@@ -84,7 +84,7 @@
 .block-container {
   position: relative;
   margin-bottom: 2px;
-}
+} 
 
 .block {
   display: flex;
@@ -215,4 +215,5 @@
   border-left: 3px solid #e8e4dc;
   padding-left: 16px;
   margin-left: 4px;
+  
 }

@@ -4,17 +4,12 @@ import './Block.css';
 
 export const Block = ({
   block, onUpdate, onUpdateMeta,
-  onAddChild, onAddBlockBelow, onRemoveBlock, onIndentBlock, focusId,
+  onAddChild, onAddBlockBelow, onRemoveBlock, onSelect ,isSelected, onIndentBlock, focusId,
 }) => {
   const inputRef = useRef(null);
 
-  const handleChange = (e) => {
-    onUpdate(block.id, e.target.value);
-    const el = inputRef.current;
-    if (el?.tagName === 'TEXTAREA') {
-      el.style.height = 'auto';
-      el.style.height = el.scrollHeight + 'px';
-    }
+  const handleBlur = (id, html) => {
+    onUpdate(id, html);
   };
 
   const handleToggle = () => {
@@ -22,8 +17,8 @@ export const Block = ({
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Tab')     { e.preventDefault(); onIndentBlock(block.id); }
-    if (e.key === 'Enter')   { e.preventDefault(); onAddBlockBelow(block.id); }
+    if (e.key === 'Tab') { e.preventDefault(); onIndentBlock(block.id); }
+    if (e.key === 'Enter') { e.preventDefault(); onAddBlockBelow(block.id); }
     if (e.key === 'Backspace' && block.content === '') {
       e.preventDefault(); onRemoveBlock(block.id);
     }
@@ -43,16 +38,20 @@ export const Block = ({
 
   return (
     <div className="block-container">
-      <div className="block">
+      <div className={`block ${isSelected ? 'block-selected' : ''}`}
+        onClick={() => onSelect(block)}
+      >
+
         <span className="handle">⠿</span>
         <BlockContent
           block={block}
           inputRef={inputRef}
-          onChange={handleChange}
+          onBlur={handleBlur} 
           onKeyDown={handleKeyDown}
           onToggle={handleToggle}
+          onFocus={() => onSelect(block)}
         />
-        <button onClick={() => onAddChild(block.id)} className="add-btn">+</button>
+        <button onClick={(e) => { e.stopPropagation(); onAddChild(block.id) }} className="add-btn">+</button>
       </div>
 
       {block.children?.length > 0 && (
@@ -62,7 +61,8 @@ export const Block = ({
               onUpdate={onUpdate} onUpdateMeta={onUpdateMeta}
               onAddChild={onAddChild} onAddBlockBelow={onAddBlockBelow}
               onRemoveBlock={onRemoveBlock} onIndentBlock={onIndentBlock}
-              focusId={focusId}
+              focusId={focusId}     onSelect={onSelect}       // 👈 faltaba
+    isSelected={isSelected}  
             />
           ))}
         </div>
