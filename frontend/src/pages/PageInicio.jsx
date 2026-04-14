@@ -22,6 +22,7 @@ export default function PageInicio() {
     setCurrentPath(newPath);
   };
 
+
     return (
 
         <div className="app">
@@ -33,7 +34,7 @@ export default function PageInicio() {
                     <Route path={currentPath} />
                     </div>
 
-                    {/* Título y Botones */}
+                    {/* Título y Botones
                     <div className="title-row">
                         <ReadMe />
                     </div>
@@ -41,7 +42,7 @@ export default function PageInicio() {
                     <FileGrid 
                     data={filesData} 
                     currentPath={currentPath}
-                    onPathUpdate={handlePathUpdate}/>
+                    onPathUpdate={handlePathUpdate}/> */}
                 </div>
             </div>
         </div>
