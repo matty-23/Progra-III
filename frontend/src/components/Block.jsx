@@ -8,7 +8,9 @@ export const Block = ({
   const inputRef = useRef(null);
 
   const handleBlur = (id, html) => {
+    console.log('handleBlur 1', id, html);
     onUpdate(id, html);
+    console.log('Updated', id, html);
   };
 
   const handleToggle = () => {

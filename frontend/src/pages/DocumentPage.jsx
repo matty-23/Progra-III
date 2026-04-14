@@ -5,10 +5,6 @@ import { useRef, useState } from 'react';
 import documentsData from "../localStorage/arbolBloques.json";
 
 const DocumentPage = ({documentId}) => {
-  // Inicialización de localStorage (solo una vez)
-  if (!localStorage.getItem("documents")) {
-    localStorage.setItem("documents", JSON.stringify(documentsData));
-  }
   
   console.log('DocumentPage renderizado con documentId:', documentId);
   const [selectedBlock, setSelectBlock] = useState(null);
@@ -41,8 +37,6 @@ const DocumentPage = ({documentId}) => {
   return (
     <>
       <div
-        className="document-page-container"
-        style={{ backgroundColor: "#f5f5f7", minHeight: "100vh" }}
       >
         <Editor
           doc={doc}

@@ -1,4 +1,5 @@
 export function updateBlock(blocks, id, patch) {
+  console.log('updateBlock 4', id, patch);
   return blocks.map(block =>
     block.id === id
       ? { ...block, ...patch }
