@@ -1,5 +1,7 @@
 import SectionButton from "./SectionButton";
 import SECTIONS from "../models/sectionModel";
+import { useState} from "react";
+import './Sidebar.css';
 
 export default function Sidebar({sections}) {
   const [activeSection, setActiveSection] = useState(null);

@@ -1,5 +1,5 @@
 import { abrirSection } from "../components/Cambiar";
-export const SECTION = (id, name, icon, ruta_pagina) => ({
+export const SECTION = (id, name, icon, action) => ({
   id,
   name,
   icon,
