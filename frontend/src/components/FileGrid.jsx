@@ -3,11 +3,7 @@ import FileCard from "./FileCard";
 import "./FileGrid.css";
 import DocumentPage from "../pages/DocumentPage.jsx";
 
-export default function FileGrid({ 
-  data, 
-  currentPath = "/", 
-  onPathUpdate 
-}) {
+export default function FileGrid({ data, currentPath = "/", onPathUpdate }) {
 
   const [files, setFiles] = useState([]);
   const [currentDocId, setCurrentDocId] = useState(null);
@@ -19,6 +15,7 @@ export default function FileGrid({
     }
   }, [data]);
 
+  console.log ("Current Path:", data, data.children);
   const handleClick = (file) => {
 
     // 📁 Navegación de carpetas
@@ -57,18 +54,7 @@ export default function FileGrid({
     <div className="grid-container">
 
       {history.length > 0 && (
-        <button 
-          className="btn-back" 
-          onClick={handleBack}
-          style={{ 
-            marginBottom: '1rem', 
-            background: 'none', 
-            border: 'none', 
-            color: '#3b82f6', 
-            cursor: 'pointer',
-            fontSize: '0.9rem'
-          }}
-        >
+        <button className="btn-back" onClick={handleBack}>
           ← Atrás
         </button>
       )}

@@ -2,7 +2,7 @@ import { Editor } from '../components/Editor.jsx';
 import Toolbar from '../components/Toolbar.jsx';
 import { useDocument } from '../hooks/useDocument.js';
 import { useRef, useState } from 'react';
-import documentsData from "../localStorage/arbolBloques.json";
+import documentsData from "../../public/localStorage/arbolBloques.json";
 
 const DocumentPage = ({documentId}) => {
   // Inicialización de localStorage (solo una vez)

@@ -5,11 +5,12 @@ import Header from "../components/Header.jsx";
 import FileGrid from "../components/FileGrid.jsx";
 import Route from "../components/Route.jsx";     
 import ReadMe from "../components/ReadMe.jsx";
+
 export default function MiArea(){
-    const [filesData, setFilesData] = useState(null);
+    const [filesData, setFilesData] = useState({ children: [] });
     
         useEffect(() => {
-            fetch("../src/localStorage/arbolArchivos.json")
+            fetch("/localStorage/arbolArchivos.json")
                 .then(res => res.json())
                 .then(data => {
                 setFilesData(data);
@@ -23,17 +24,8 @@ export default function MiArea(){
     
     
         return (
-    
-            <div className="app">
-                <Sidebar />
-                <div className="main">
-                    <Header />
                     <div>
-                        <div className="route">
-                        <Route path={currentPath} />
-                        </div>
     
-                        
                         <div className="title-row">
                             <ReadMe />
                         </div>
@@ -43,7 +35,5 @@ export default function MiArea(){
                         currentPath={currentPath}
                         onPathUpdate={handlePathUpdate}/> 
                     </div>
-                </div>
-            </div>
         );
 }

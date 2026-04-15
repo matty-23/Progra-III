@@ -1,15 +1,19 @@
 import SectionButton from "./SectionButton";
 import SECTIONS from "../models/sectionModel";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState} from "react";
 import './Sidebar.css';
 
-export default function Sidebar({sections}) {
+
+export default function Sidebar() {
+
+  const { nameUser, UserId } = useParams();
   const [activeSection, setActiveSection] = useState(null);
   const navigate = useNavigate();
+
   const handleClick = (section) => {
   setActiveSection(section.name);
-  navigate(`/${section.name}`);
+  navigate(`/${nameUser}/${UserId}/${section.ruta}`);
 };
   return (
     <div className="sidebar">
@@ -29,10 +33,6 @@ export default function Sidebar({sections}) {
           onClick={() => handleClick(section)}
         />
       ))}
-        {/* <SectionButton section={SECTIONS[0]} isActive={false} onClick={() => {}} />
-        <SectionButton section={SECTIONS[2]} isActive={false} onClick={() => {}} />
-        <SectionButton section={SECTIONS[1]} isActive={false} onClick={() => {}} />
-        <SectionButton section={SECTIONS[3]} isActive={false} onClick={() => {}} /> */}
       </nav>
     
     </div>

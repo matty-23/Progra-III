@@ -1,4 +1,4 @@
-import data from "../localStorage/arbolBloques.json";
+import data from "../../public/localStorage/arbolBloques.json";
 const KEY = 'documents';
 
 export const documentService = {
