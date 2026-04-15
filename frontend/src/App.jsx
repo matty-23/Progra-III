@@ -31,8 +31,8 @@ export default function App() {
         credenciales predefinidas
         */}
 
-        <Route path="/:nameUser/:UserId" element={<MiArea/>} />
-
+        <Route path="/:nameUser/:UserId" element={<PageInicio/>} />
+        <Route path="/Mi Area" element={<MiArea />} />
       </Routes>
     </BrowserRouter>
     )

@@ -1,13 +1,15 @@
 import SectionButton from "./SectionButton";
 import SECTIONS from "../models/sectionModel";
+import { useNavigate } from "react-router-dom";
 import { useState} from "react";
 import './Sidebar.css';
 
 export default function Sidebar({sections}) {
   const [activeSection, setActiveSection] = useState(null);
+  const navigate = useNavigate();
   const handleClick = (section) => {
   setActiveSection(section.name);
-  section.action();
+  navigate(`/${section.name}`);
 };
   return (
     <div className="sidebar">
