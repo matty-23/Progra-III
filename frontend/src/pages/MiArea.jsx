@@ -7,10 +7,6 @@ import buscarArchivosporRuta from "/src/hooks/useArea.js";
 
 export default function MiArea({route="mi-area"}) {
 
-    // const segments = route.split("/").filter(Boolean);
-    // const currentFolder = segments[segments.length - 1];
-    // const elementos=await buscarArchivosporRuta(route);
-
     const location = useLocation();
     const [elementos, setElementos] = useState([]);
     useEffect(() => {
