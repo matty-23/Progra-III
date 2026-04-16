@@ -24,8 +24,6 @@ const BLOCK_TYPES = [
   { value: 'quote',     label: 'Cita' },
 ];
 
-
-
 const Sep = () => <div className="tb-sep" />;
 
 const TbBtn = ({ title, onClick, className = '', children }) => (
@@ -72,7 +70,6 @@ const Toolbar = ({ selectedBlock, onChangeType, onUpdateMeta }) => {
 
       <Sep />
 
-      {/* Formato texto */}
       <div className="toolbar-group">
         {FORMAT_BUTTONS.map(({ cmd, label, className, title }) => (
           <TbBtn key={cmd} title={title} className={`tb-btn-text ${className}`} onClick={() => applyFormat(cmd)}>
@@ -83,7 +80,6 @@ const Toolbar = ({ selectedBlock, onChangeType, onUpdateMeta }) => {
 
       <Sep />
 
-      {/* Alineación */}
       <div className="toolbar-group">
         {ALIGN_BUTTONS.map(({ value, title, icon }) => (
           <TbBtn key={value} title={title} onClick={() => applyAlign(value)}>
@@ -115,7 +111,6 @@ const Toolbar = ({ selectedBlock, onChangeType, onUpdateMeta }) => {
 
       <Sep />
 
-      {/* Acciones */}
       <div className="toolbar-group">
         <TbBtn title="Duplicar bloque">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">

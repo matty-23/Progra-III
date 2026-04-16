@@ -1,140 +1,158 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react'; // 1. Importa useRef
+import './BlockContent.css';
 
-const HEADING_STYLE = {
-  fontFamily: "'Lora', Georgia, serif",
-  fontSize: '1.35rem',
-  fontWeight: '600',
-  color: '#1a1a18',
-  letterSpacing: '-0.015em',
-  lineHeight: '1.4',
-  paddingTop: '12px',
-};
+const BlockContent = ({
+  block,
+  inputRef,
+  onEnter,
+  onTab,
+  onBackspaceOnEmpty,
+  onFocus,
+  onBlur,
+  onToggle,
+  onUpdate,
+  isProgrammaticFocus
+}) => {
 
-const BULLET_STYLE = {
-  fontFamily: "'DM Sans', sans-serif",
-  fontSize: '0.975rem',
-  color: '#2d2c2a',
-  lineHeight: '1.7',
-};
-const QUOTE_STYLE = {
-  fontFamily: "'Lora', Georgia, serif",
-  fontSize: '1.05rem',
-  fontStyle: 'italic',
-  color: '#6b6860',
-  borderLeft: '3px solid #e8e4dc',
-  paddingLeft: '16px',
-  marginLeft: '4px',
-};
-
-const BASE_STYLE = {
-  fontFamily: "'DM Sans', sans-serif",
-  fontSize: '0.975rem',
-  color: '#2d2c2a',
-  lineHeight: '1.7',
-  outline: 'none',
-  flex: 1,
-  minHeight: '28px',
-  whiteSpace: 'pre-wrap',
-  wordBreak: 'break-word',
-  caretColor: '#6b6860',
-};
-
- const BlockContent = ({ block, inputRef, onKeyDown, onFocus, onBlur, onToggle }) => {
-  // Sincroniza el contenido cuando cambia externamente
-   useEffect(() => {
+  useEffect(() => {
     const el = inputRef.current;
     if (el) {
-      el.innerHTML = block.content ?? '';
+      if (el.innerHTML !== block.content) {
+        el.innerHTML = block.content ?? '';
+      }
+    }
+  }, [block.id, block.type, block.content]);
+
+  useEffect(() => {
+    const el = inputRef.current;
+    if (el && block.content !== undefined) {
+      if (el.innerHTML !== block.content) {
+        el.innerHTML = block.content;
+      }
     }
   }, [block.id, block.type]);
+  const isEmpty = () => {
+    const el = inputRef.current;
+    if (!el) return true;
+    const html = el.innerHTML;
+    return (
+      html === '' ||
+      html === '<br>' ||
+      html.replace(/<[^>]+>/g, '').trim() === ''
+    );
+  };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      onEnter?.();
+    }
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      onTab?.();
+    }
+    if (e.key === 'Backspace' && isEmpty()) {
+      e.preventDefault();
+      onBackspaceOnEmpty?.();
+    }
+  };
+
+  const handleInput = () => {
+    const el = inputRef.current;
+    if (el) {
+      onUpdate?.(block.id, el.innerHTML);
+    }
+  };
   const handleBlur = () => {
     const el = inputRef.current;
-    if (el) onBlur?.(block.id, el.innerHTML);
+    if (el) {
+      // Al perder foco, aseguramos que el último cambio esté en el estado
+      onUpdate?.(block.id, el.innerHTML);
+      onBlur?.(block.id, el.innerHTML);
+    }
   };
 
-  const style = {
-    ...BASE_STYLE,
-    ...(block.type === 'heading' ? HEADING_STYLE : {}),
-    ...(block.type === 'quote' ? QUOTE_STYLE : {}),
-    textAlign: block.metadata?.align ?? 'left',
+  const getClassName = () => {
+    let base = 'block-base';
+    if (block.type === 'heading') base += ' block-heading';
+    if (block.type === 'quote') base += ' block-quote';
+    return base;
   };
 
-  // bullet y numbered
+  const handleFocus = () => {
+    const el = inputRef.current;
+    if (isProgrammaticFocus?.current && el) {
+      const range = document.createRange();
+      const selection = window.getSelection();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+    if (isProgrammaticFocus) {
+      isProgrammaticFocus.current = false;
+    }
+    onFocus?.();
+  };
+
+  // --- RENDERIZADO ---
+
   if (block.type === 'bullet' || block.type === 'numbered') {
     return (
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', flex: 1, width: '100%' }}>
-        <span style={{
-          flexShrink: 0,
-          color: '#aaa89e',
-          fontSize: '0.975rem',
-          lineHeight: '1.7',
-          userSelect: 'none',
-          minWidth: '16px',
-          textAlign: 'right',
-        }}>
+      <div className="block-row">
+        <span className="block-marker">
           {block.type === 'bullet' ? '•' : `${block.metadata?.index ?? 1}.`}
         </span>
         <div
           ref={inputRef}
           contentEditable
           suppressContentEditableWarning
-          onKeyDown={onKeyDown}
-          onFocus={onFocus}
+          onKeyDown={handleKeyDown}
+          onInput={handleInput}
+          onFocus={handleFocus}
           onBlur={handleBlur}
-          style={{
-            ...BASE_STYLE,
-            flex: 1,
-            minWidth: 0,
-          }}
+          className="block-base"
         />
       </div>
     );
   }
 
-  // todo — mismo fix
   if (block.type === 'todo') {
     return (
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', flex: 1, width: '100%' }}>
+      <div className="block-row">
         <input
           type="checkbox"
           checked={block.metadata?.checked ?? false}
           onChange={() => onToggle?.()}
           className="block-checkbox"
-          style={{ marginTop: '5px', flexShrink: 0 }}
         />
         <div
           ref={inputRef}
           contentEditable
           suppressContentEditableWarning
-          onKeyDown={onKeyDown}
-          onFocus={onFocus}
+          onKeyDown={handleKeyDown}
+          onInput={handleInput}
+          onFocus={handleFocus}
           onBlur={handleBlur}
-          style={{
-            ...BASE_STYLE,
-            flex: 1,
-            minWidth: 0,
-            textDecoration: block.metadata?.checked ? 'line-through' : 'none',
-            color: block.metadata?.checked ? '#b5b3ab' : '#2d2c2a',
-          }}
+          className={`block-base ${block.metadata?.checked ? 'block-checked' : ''}`}
         />
       </div>
     );
   }
-
-
 
   return (
     <div
       ref={inputRef}
       contentEditable
       suppressContentEditableWarning
-      onKeyDown={onKeyDown}
-      onFocus={onFocus}
+      onKeyDown={handleKeyDown}
+      onInput={handleInput} // <--- Faltaba agregar onInput aquí también
+      onFocus={handleFocus}
       onBlur={handleBlur}
-      style={style}
-    
+      className={getClassName()}
+      style={{ textAlign: block.metadata?.align ?? 'left' }}
     />
   );
 };
+
 export default BlockContent;

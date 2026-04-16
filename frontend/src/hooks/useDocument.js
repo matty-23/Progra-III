@@ -21,30 +21,72 @@ export const useDocument = (documentId) => {
     const [doc, setDoc] = useState(null);
     const isFirstRender = useRef(true);
     const [focusId, setFocusId] = useState(null);
+    const saveTimerRef = useRef(null);
 
     useEffect(() => {
+        console.log(`[useDocument] 🚀 Iniciando carga para ID: ${documentId}`);
+
         const loaded = documentService.loadById(documentId) ?? DOC_INICIAL;
         isFirstRender.current = true;
         setDoc(loaded);
     }, [documentId]);
+    
+    useEffect(() => {
+        if (!doc) return;
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            console.log('[useDocument] 🟢 Primer renderizado. No guardamos aún.');
+            return;
+        }
+        
+        console.log('[useDocument] 💾 useEffect disparado. Guardando en servicio...');
+        documentService.save(doc);
+    }, [doc]);
+
     useEffect(() => {
         if (!doc) return;
         if (isFirstRender.current) {
             isFirstRender.current = false;
             return;
         }
-        documentService.save(doc);
-    }, [doc]);
+
+        // Limpiar timer anterior si el usuario sigue escribiendo rápido
+        if (saveTimerRef.current) {
+            clearTimeout(saveTimerRef.current);
+        }
+
+        console.log('[useDocument] ⏳ Esperando para guardar...');
+
+        // Guardar después de 1 segundo de inactividad
+        saveTimerRef.current = setTimeout(() => {
+            console.log('[useDocument] 💾 Guardando en servicio (Debounce)');
+            documentService.save(doc);
+        }, 1000);
+
+        // Cleanup: si el componente se desmonta, guardamos inmediatamente
+        return () => {
+            if (saveTimerRef.current) {
+                clearTimeout(saveTimerRef.current);
+                documentService.save(doc); // Guardado final de seguridad
+            }
+        };
+    }, [doc]); 
 
     const updateContent = (id, newContent) => {
-        console.log('updateContent 2', id, newContent);
-        setDoc(prev => ({
-            ...prev,
-            blocks: updateBlock(prev.blocks, id, { content: newContent }),
-            
-        }));
-        console.log('updateContent 3', id, newContent);
+        console.log('[useDocument] 📥 Recibida actualización para', id);
+        
+        setDoc(prev => {
+            if (!prev) return prev;
+            const newBlocks = updateBlock(prev.blocks, id, { content: newContent });
+            console.log('[useDocument] 🔄 Estado actualizado. Nuevo contenido:', newContent.substring(0, 20));
+            return {
+                ...prev,
+                blocks: newBlocks,
+            };
+        });
     };
+
+
 
 
     const updateMeta = (id, patch) => {
