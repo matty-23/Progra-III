@@ -6,7 +6,6 @@ import DocumentPage from "../pages/DocumentPage.jsx";
 export default function FileGrid({ data, currentPath = "/", onPathUpdate }) {
 
   const [files, setFiles] = useState([]);
-  const [currentDocId, setCurrentDocId] = useState(null);
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
@@ -15,7 +14,6 @@ export default function FileGrid({ data, currentPath = "/", onPathUpdate }) {
     }
   }, [data]);
 
-  console.log ("Current Path:", data, data.children);
   const handleClick = (file) => {
 
     // 📁 Navegación de carpetas
