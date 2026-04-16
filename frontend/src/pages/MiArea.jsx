@@ -1,26 +1,38 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import '../styles/pageInicio.css';
-import Sidebar from "../components/sidebar.jsx";
-import Header from "../components/Header.jsx";
 import FileGrid from "../components/FileGrid.jsx";
-import Route from "../components/Route.jsx";
 import ReadMe from "../components/ReadMe.jsx";
+import buscarArchivosporRuta from "/src/hooks/useArea.js";
 
 export default function MiArea({route="mi-area"}) {
-    const [filesData, setFilesData] = useState({ children: [] });
 
+    // const segments = route.split("/").filter(Boolean);
+    // const currentFolder = segments[segments.length - 1];
+    // const elementos=await buscarArchivosporRuta(route);
+
+    const location = useLocation();
+    const [elementos, setElementos] = useState([]);
     useEffect(() => {
-        fetch("/localStorage/arbolArchivos.json")
-            .then(res => res.json())
-            .then(data => {
-                setFilesData(data);
-            });
-    }, []);
+        const cargar = async () => {
+            
+        const fullPath = location.pathname;
 
-    const [currentPath, setCurrentPath] = useState("/");
-    const handlePathUpdate = (newPath) => {
-        setCurrentPath(newPath);
+        const pathAfter = fullPath.split("mi-area/")[1] || "";
+
+        const res = await buscarArchivosporRuta(pathAfter);
+        setElementos(res);
     };
+
+    cargar();
+    }, [location.pathname]);
+    const segments = location.pathname.split("/").filter(Boolean);
+    const currentFolder = segments[segments.length - 1] || "mi-area";
+
+    const datos = {
+        name: currentFolder,
+        children: elementos
+    }
 
     return (
         <div>
@@ -28,10 +40,7 @@ export default function MiArea({route="mi-area"}) {
                 <ReadMe />
             </div>
 
-            <FileGrid
-                data={filesData}
-                currentPath={currentPath}
-                onPathUpdate={handlePathUpdate} />
+            <FileGrid data={datos}/>
         </div>
     );
 }
