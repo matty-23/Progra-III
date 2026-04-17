@@ -1,0 +1,82 @@
+.sidebar {
+  width: 250px;
+  background-color: #1f2937; /* Gris oscuro */
+  color: #d1d5db;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  flex-shrink: 0;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.sidebar-logo {
+  background-color: #3b82f6;
+  width: 35px;
+  height: 35px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sidebar nav p {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: 0.2s;
+  font-size: 0.95rem;
+}
+
+.sidebar nav p:hover {
+  background-color: #374151;
+  color: white;
+}
+
+.sidebar nav p.active {
+  background-color: #111827; /* Más oscuro para el activo */
+  color: white;
+  font-weight: 500;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  border-top: 1px solid #374151;
+  padding-top: 20px;
+}
+
+.storage-label {
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+  color: #9ca3af;
+}
+
+.storage-bar {
+  height: 6px;
+  background-color: #374151;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.storage-fill {
+  width: 40%; /* Simulando el 4.2GB de 10GB */
+  background-color: #3b82f6;
+  height: 100%;
+}

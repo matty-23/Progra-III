@@ -1,0 +1,48 @@
+/* Centrar todo en pantalla */
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #4f46e5, #9333ea);
+  font-family: Arial, sans-serif;
+}
+
+/* Botón */
+.login-button {
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #6366f1, #7c3aed);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.login-button:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Click */
+.login-button:active {
+  transform: scale(0.97);
+}
+
+/* Efecto glow suave */
+.login-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.login-button:hover::after {
+  opacity: 1;
+}
