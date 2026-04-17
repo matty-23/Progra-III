@@ -63,6 +63,7 @@ export function moveBlock(blocks, id, newParentId) {
 export function flattenTree(blocks) {
   return blocks.flatMap(block => [block, ...flattenTree(block.children ?? [])]);
 }
+
 export function indentBlock(blocks, id) {
   const process = (list) => {
     const result = [];

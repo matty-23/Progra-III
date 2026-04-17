@@ -1,60 +1,69 @@
-import data from "../localStorage/arbolBloques.json";
+// documentService.js
 const KEY = 'documents';
 
 export const documentService = {
-  loadAll() {
-    // try {
-    //   const raw = localStorage.getItem(KEY);
-    //   console.log('Cargando documentos:', raw);
-    //   return raw ? JSON.parse(raw) : null;
-    // } catch {
-    //   return null;
-    // }
-    return data;
+  getStore() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (!raw) {
+        // Si no hay nada, inicializamos con la estructura básica
+        const initialStore = { documents: [] };
+        localStorage.setItem(KEY, JSON.stringify(initialStore));
+        return initialStore;
+      }
+      return JSON.parse(raw);
+    } catch (e) {
+      console.error("Error leyendo localStorage, reseteando...", e);
+      const initialStore = { documents: [] };
+      localStorage.setItem(KEY, JSON.stringify(initialStore));
+      return initialStore;
+    }
   },
-
+  
   loadById(id) {
-    // const data = this.loadAll();
-    // const doc = data?.documents?.find(d => d.id === id) ?? null;
-    // if (!doc) return null;
+    const store = this.getStore();
+    const doc = store?.documents?.find(d => d.id === id);
+    
+    if (!doc) {
+        return null;
+    }
+    
 
-    // const normalize = (blocks) =>
-    //   blocks.map(b => ({
-    //     id: b.id,
-    //     type: b.type ?? 'paragraph',
-    //     content: b.content ?? '',
-    //     align: b.align ?? 'left',
-    //     metadata: b.metadata ?? {},
-    //     children: normalize(b.children ?? []),
-    //   }));
-
-    // return { ...doc, blocks: normalize(doc.blocks) };
-    const doc = data?.documents?.find(d => d.id === id) ?? null;
-    if (!doc) return null;
-
+    // Normalización profunda para evitar referencias rotas
     const normalize = (blocks) =>
       blocks.map(b => ({
+        ...b, // Copiar todas las propiedades
         id: b.id,
         type: b.type ?? 'paragraph',
         content: b.content ?? '',
-        align: b.align ?? 'left',
         metadata: b.metadata ?? {},
-        children: normalize(b.children ?? []),
+        children: b.children ? normalize(b.children) : [],
       }));
-      console.log('Documento cargado:', doc);
+
     return { ...doc, blocks: normalize(doc.blocks) };
-  
   },
 
   save(doc) {
     try {
-      const data = this.loadAll() ?? { documents: [] };
-      const idx = data.documents.findIndex(d => d.id === doc.id);
-      if (idx >= 0) data.documents[idx] = doc;   // actualiza
-      else data.documents.push(doc);              // inserta nuevo
-      localStorage.setItem(KEY, JSON.stringify(data));
+      const store = this.getStore();
+      const idx = store.documents.findIndex(d => d.id === doc.id);
+      
+      // Clonamos el doc para evitar problemas de referencias circulares o mutaciones
+      const docToSave = JSON.parse(JSON.stringify(doc));
+
+      if (idx >= 0) {
+        store.documents[idx] = docToSave;
+      } else {
+        store.documents.push(docToSave);
+      }
+      
+      localStorage.setItem(KEY, JSON.stringify(store));
+      
+      // VERIFICACIÓN INMEDIATA (Solo para debug, quitar en producción)
+      const verify = JSON.parse(localStorage.getItem(KEY));
+      const savedDoc = verify.documents.find(d => d.id === doc.id);
+
     } catch (e) {
-      console.error('No se pudo guardar:', e);
     }
   },
 };
