@@ -32,7 +32,6 @@ export default function FileGrid({ data}) {
 
   return (
     <div className="grid-container">
-
       <div className="grid">
         {files.map((file, i) => (
           <FileCard key={i} file={file} onClick={handleClick} />

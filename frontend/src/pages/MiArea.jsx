@@ -31,7 +31,7 @@ export default function MiArea({route="mi-area"}) {
     }
 
     return (
-        <div>
+        <div className="General">
             <div className="title-row">
                 <ReadMe />
             </div>
