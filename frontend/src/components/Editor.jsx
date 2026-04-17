@@ -1,4 +1,5 @@
 import { Block } from './Block';
+import './Editor.css';
 
 export const Editor = ({ doc, onUpdate, onSelectBlock,selectedBlock, onAddChild, onAddBlockBelow, onRemoveBlock, onIndentBlock, onUpdateMeta, focusId }) => {
   return (

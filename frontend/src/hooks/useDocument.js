@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createBlock, BLOCK_TYPES } from '../models/blockModel';
 import { documentService } from '../domain/documentService';
 import {
@@ -17,30 +17,49 @@ const DOC_INICIAL = {
     blocks: [createBlock(BLOCK_TYPES.PARAGRAPH, '¡Bienvenida al editor!')],
 };
 
-export const useDocument = (documentId) => {        // 👈 recibe el id
-    const [doc, setDoc] = useState(
-        () => documentService.loadById(documentId) ?? DOC_INICIAL
-    );
+export const useDocument = (documentId) => {
+    const [doc, setDoc] = useState(null);
+    const isFirstRender = useRef(true);
     const [focusId, setFocusId] = useState(null);
+    const saveTimerRef = useRef(null);
 
     useEffect(() => {
-        documentService.save(doc);
-    }, [doc]);
+        const loaded = documentService.loadById(documentId) ?? DOC_INICIAL;
+        isFirstRender.current = true;
+        setDoc(loaded);
+    }, [documentId]);
 
+    useEffect(() => {
+        const loaded = documentService.loadById(documentId) ?? DOC_INICIAL;
+        setDoc(loaded);
+    }, [documentId]);
+
+  
     const updateContent = (id, newContent) => {
-        setDoc(prev => ({
-            ...prev,
-            blocks: updateBlock(prev.blocks, id, { content: newContent }),
-        }));
+        setDoc(prev => {
+            if (!prev) return prev;
+
+            const nextDoc = {
+                ...prev,
+                blocks: updateBlock(prev.blocks, id, { content: newContent })
+            };
+
+            if (saveTimerRef.current) {
+                clearTimeout(saveTimerRef.current);
+            }
+            saveTimerRef.current = setTimeout(() => {
+                documentService.save(nextDoc);
+            }, 1000);
+            return nextDoc;
+        });
     };
 
-
     const updateMeta = (id, patch) => {
-         if (id === 'title') {
+        if (id === 'title') {
             setDoc(prev => ({ ...prev, title: patch.title }));
             return;
         }
-        
+
         setDoc(prev => {
             const block = flattenTree(prev.blocks).find(b => b.id === id);
             if (!block) return prev;
@@ -66,7 +85,7 @@ export const useDocument = (documentId) => {        // 👈 recibe el id
 
     const removeBlock = (id) => {
         if (doc.blocks[0]?.id === id) return;
-        
+
         const { blocks: updatedBlocks, focusId: newFocusId } = removeBlockWithFocus(doc.blocks, id);
         setDoc(prev => ({ ...prev, blocks: updatedBlocks }));
         if (newFocusId) setFocusId(newFocusId);
@@ -85,6 +104,9 @@ export const useDocument = (documentId) => {        // 👈 recibe el id
             blocks: updateBlock(prev.blocks, id, { type: newType }),
         }));
     };
-
-    return { doc, updateContent, updateMeta, addChild, addBlockBelow, changeType, removeBlock, indentBlock, focusId };
+    
+    if (!doc) return { doc: null };
+    return {
+        doc, updateContent, updateMeta, addChild, addBlockBelow, changeType, removeBlock, indentBlock, focusId
+    };
 };
