@@ -6,7 +6,6 @@ import documentsData from "../localStorage/arbolBloques.json";
 
 const DocumentPage = ({documentId}) => {
   
-  console.log('DocumentPage renderizado con documentId:', documentId);
   const [selectedBlock, setSelectBlock] = useState(null);
   const lastSelectedRef = useRef(null);
 
@@ -33,7 +32,6 @@ const DocumentPage = ({documentId}) => {
   };
 
   if (!doc) return <div>Cargando documento...</div>;
- console.log('DocumentPage renderizado con documentId:', documentId);
   return (
     <>
       <div

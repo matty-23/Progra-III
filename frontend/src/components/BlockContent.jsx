@@ -16,21 +16,11 @@ const BlockContent = ({
 
   useEffect(() => {
     const el = inputRef.current;
-    if (el) {
-      if (el.innerHTML !== block.content) {
-        el.innerHTML = block.content ?? '';
-      }
-    }
-  }, [block.id, block.type, block.content]);
+    if (!el) return;
 
-  useEffect(() => {
-    const el = inputRef.current;
-    if (el && block.content !== undefined) {
-      if (el.innerHTML !== block.content) {
-        el.innerHTML = block.content;
-      }
-    }
-  }, [block.id, block.type]);
+    el.innerHTML = block.content ?? '';
+  }, [block.id]);
+
   const isEmpty = () => {
     const el = inputRef.current;
     if (!el) return true;
@@ -38,7 +28,7 @@ const BlockContent = ({
     return (
       html === '' ||
       html === '<br>' ||
-      html.replace(/<[^>]+>/g, '').trim() === ''
+      cleanHTML(html) === ''
     );
   };
 
@@ -60,18 +50,22 @@ const BlockContent = ({
   const handleInput = () => {
     const el = inputRef.current;
     if (el) {
-      onUpdate?.(block.id, el.innerHTML);
+      onUpdate?.(block.id, cleanHTML(el.innerHTML));
     }
   };
   const handleBlur = () => {
     const el = inputRef.current;
     if (el) {
       // Al perder foco, aseguramos que el último cambio esté en el estado
-      onUpdate?.(block.id, el.innerHTML);
-      onBlur?.(block.id, el.innerHTML);
+      onUpdate?.(block.id, cleanHTML(el.innerHTML));
+      onBlur?.(block.id, cleanHTML(el.innerHTML));
     }
   };
-
+  const cleanHTML = (html) => {
+    return html
+      .replace(/<ul>|<\/ul>|<ol>|<\/ol>|<li>|<\/li>/g, '')
+      .trim();
+  };
   const getClassName = () => {
     let base = 'block-base';
     if (block.type === 'heading') base += ' block-heading';
@@ -150,7 +144,12 @@ const BlockContent = ({
       onFocus={handleFocus}
       onBlur={handleBlur}
       className={getClassName()}
-      style={{ textAlign: block.metadata?.align ?? 'left' }}
+      style={{
+        textAlign: block.metadata?.align ?? 'left',
+        fontWeight: block.metadata?.bold ? 'bold' : 'normal',
+        fontStyle: block.metadata?.italic ? 'italic' : 'normal',
+        textDecoration: block.metadata?.underline ? 'underline' : 'none',
+      }}
     />
   );
 };

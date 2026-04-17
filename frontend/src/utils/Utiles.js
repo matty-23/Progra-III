@@ -1,5 +1,4 @@
 export function updateBlock(blocks, id, patch) {
-  console.log('updateBlock 4', id, patch);
   return blocks.map(block =>
     block.id === id
       ? { ...block, ...patch }
@@ -64,6 +63,7 @@ export function moveBlock(blocks, id, newParentId) {
 export function flattenTree(blocks) {
   return blocks.flatMap(block => [block, ...flattenTree(block.children ?? [])]);
 }
+
 export function indentBlock(blocks, id) {
   const process = (list) => {
     const result = [];

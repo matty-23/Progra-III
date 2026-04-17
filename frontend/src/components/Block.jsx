@@ -87,10 +87,9 @@ const isProgrammaticFocus = useRef(false);
           block={block}
           inputRef={inputRef}
           onToggle={handleToggle}
-          
           onEnter={handleEnter}
-          onBlur={handleUpdate} 
-          onInput={handleUpdate}  
+          onBlur={handleUpdate}
+          onUpdate={handleUpdate}  
           onTab={handleTab}
           onBackspaceOnEmpty={handleBackspaceOnEmpty}
 
@@ -122,8 +121,6 @@ const isProgrammaticFocus = useRef(false);
               onIndentBlock={onIndentBlock}
               onSelect={onSelect}
               focusId={focusId}
-
-              // ✅ FIX IMPORTANTE
               isSelected={focusId === child.id}
             />
           ))}

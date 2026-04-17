@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef} from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createBlock, BLOCK_TYPES } from '../models/blockModel';
 import { documentService } from '../domain/documentService';
 import {
@@ -24,70 +24,35 @@ export const useDocument = (documentId) => {
     const saveTimerRef = useRef(null);
 
     useEffect(() => {
-        console.log(`[useDocument] 🚀 Iniciando carga para ID: ${documentId}`);
-
         const loaded = documentService.loadById(documentId) ?? DOC_INICIAL;
         isFirstRender.current = true;
         setDoc(loaded);
     }, [documentId]);
-    
-    useEffect(() => {
-        if (!doc) return;
-        if (isFirstRender.current) {
-            isFirstRender.current = false;
-            console.log('[useDocument] 🟢 Primer renderizado. No guardamos aún.');
-            return;
-        }
-        
-        console.log('[useDocument] 💾 useEffect disparado. Guardando en servicio...');
-        documentService.save(doc);
-    }, [doc]);
 
     useEffect(() => {
-        if (!doc) return;
-        if (isFirstRender.current) {
-            isFirstRender.current = false;
-            return;
-        }
+        const loaded = documentService.loadById(documentId) ?? DOC_INICIAL;
+        setDoc(loaded);
+    }, [documentId]);
 
-        // Limpiar timer anterior si el usuario sigue escribiendo rápido
-        if (saveTimerRef.current) {
-            clearTimeout(saveTimerRef.current);
-        }
-
-        console.log('[useDocument] ⏳ Esperando para guardar...');
-
-        // Guardar después de 1 segundo de inactividad
-        saveTimerRef.current = setTimeout(() => {
-            console.log('[useDocument] 💾 Guardando en servicio (Debounce)');
-            documentService.save(doc);
-        }, 1000);
-
-        // Cleanup: si el componente se desmonta, guardamos inmediatamente
-        return () => {
-            if (saveTimerRef.current) {
-                clearTimeout(saveTimerRef.current);
-                documentService.save(doc); // Guardado final de seguridad
-            }
-        };
-    }, [doc]); 
-
+  
     const updateContent = (id, newContent) => {
-        console.log('[useDocument] 📥 Recibida actualización para', id);
-        
         setDoc(prev => {
             if (!prev) return prev;
-            const newBlocks = updateBlock(prev.blocks, id, { content: newContent });
-            console.log('[useDocument] 🔄 Estado actualizado. Nuevo contenido:', newContent.substring(0, 20));
-            return {
+
+            const nextDoc = {
                 ...prev,
-                blocks: newBlocks,
+                blocks: updateBlock(prev.blocks, id, { content: newContent })
             };
+
+            if (saveTimerRef.current) {
+                clearTimeout(saveTimerRef.current);
+            }
+            saveTimerRef.current = setTimeout(() => {
+                documentService.save(nextDoc);
+            }, 1000);
+            return nextDoc;
         });
     };
-
-
-
 
     const updateMeta = (id, patch) => {
         if (id === 'title') {
@@ -139,6 +104,9 @@ export const useDocument = (documentId) => {
             blocks: updateBlock(prev.blocks, id, { type: newType }),
         }));
     };
+    
     if (!doc) return { doc: null };
-    return { doc, updateContent, updateMeta, addChild, addBlockBelow, changeType, removeBlock, indentBlock, focusId };
+    return {
+        doc, updateContent, updateMeta, addChild, addBlockBelow, changeType, removeBlock, indentBlock, focusId
+    };
 };
