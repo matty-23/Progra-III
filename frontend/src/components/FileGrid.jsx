@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
 import FileCard from "./FileCard";
 import "./FileGrid.css";
-import DocumentPage from "../pages/DocumentPage.jsx";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-export default function FileGrid({ 
-  data, 
-  currentPath = "/", 
-  onPathUpdate 
-}) {
+export default function FileGrid({ data}) {
 
   const [files, setFiles] = useState([]);
-  const [currentDocId, setCurrentDocId] = useState(null);
-  const [history, setHistory] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   useEffect(() => {
     if (data?.children) {
@@ -21,57 +19,19 @@ export default function FileGrid({
 
   const handleClick = (file) => {
 
-    // 📁 Navegación de carpetas
     if (file.type === "folder") {
-      setHistory(prev => [...prev, { 
-        files: files, 
-        path: currentPath 
-      }]);
-
-      setFiles(file.children || []);
-
       const newPath = `${currentPath}/${file.name}`.replace("//", "/");
-      if (onPathUpdate) onPathUpdate(newPath);
+      navigate(newPath);
     }
 
-    // 📄 Abrir documento
     if (file.type === "document") {
       window.open(`/document/${file.documentId}`, "_blank");
       
     }
   };
 
-  const handleBack = () => {
-    if (history.length > 0) {
-      const prev = history[history.length - 1];
-
-      setFiles(prev.files);
-      setHistory(prevHistory => prevHistory.slice(0, -1));
-
-      if (onPathUpdate) onPathUpdate(prev.path);
-    }
-  };
-
-
   return (
     <div className="grid-container">
-
-      {history.length > 0 && (
-        <button 
-          className="btn-back" 
-          onClick={handleBack}
-          style={{ 
-            marginBottom: '1rem', 
-            background: 'none', 
-            border: 'none', 
-            color: '#3b82f6', 
-            cursor: 'pointer',
-            fontSize: '0.9rem'
-          }}
-        >
-          ← Atrás
-        </button>
-      )}
 
       <div className="grid">
         {files.map((file, i) => (

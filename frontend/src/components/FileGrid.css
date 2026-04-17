@@ -3,3 +3,20 @@
   grid-template-columns: repeat(auto-fill, 180px); /* 🔥 tamaño fijo */
   gap: 16px;
 }
+.btn-back {
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+/* style={{ 
+            marginBottom: '1rem', 
+            background: 'none', 
+            border: 'none', 
+            color: '#3b82f6', 
+            cursor: 'pointer',
+            fontSize: '0.9rem'
+          }} */

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import '../styles/pageInicio.css';
 import Sidebar from "../components/sidebar.jsx";
 import Header from "../components/Header.jsx";
+import { Outlet } from "react-router-dom";
 import FileGrid from "../components/FileGrid.jsx";
 import Route from "../components/Route.jsx";     
 import ReadMe from "../components/ReadMe.jsx";
@@ -10,7 +11,7 @@ export default function PageInicio() {
     const [filesData, setFilesData] = useState(null);
 
     useEffect(() => {
-        fetch("../src/localStorage/arbolArchivos.json")
+        fetch("/localStorage/arbolArchivos.json")
             .then(res => res.json())
             .then(data => {
             setFilesData(data);
@@ -34,15 +35,7 @@ export default function PageInicio() {
                     <Route path={currentPath} />
                     </div>
 
-                    {/* Título y Botones
-                    <div className="title-row">
-                        <ReadMe />
-                    </div>
-
-                    <FileGrid 
-                    data={filesData} 
-                    currentPath={currentPath}
-                    onPathUpdate={handlePathUpdate}/> */}
+                    <Outlet />
                 </div>
             </div>
         </div>

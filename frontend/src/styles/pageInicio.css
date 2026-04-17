@@ -103,7 +103,7 @@ body {
 }
 
 /* --- FILE GRID --- */
-/* .files-section-header {
+.files-section-header {
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -120,19 +120,19 @@ s
 
 
 
-/* .file-card:hover {
+.file-card:hover {
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   border-color: #d1d5db;
 } */
 
-/* .card-preview {
+.card-preview {
   height: 140px;
   background-color: #f8fafc;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-} */
+}
 
 /* Simulacion de iconos */
 .icon-folder {
@@ -161,9 +161,9 @@ s
   border-radius: 4px;
 }
 
-/* .card-info {
+.card-info {
   padding: 12px;
-} */
+} 
 
 .file-name {
   font-weight: 500;

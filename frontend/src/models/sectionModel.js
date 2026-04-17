@@ -1,15 +1,14 @@
-import { abrirSection } from "../components/Cambiar";
-export const SECTION = (id, name, icon, action) => ({
+export const SECTION = (id, name, icon,ruta) => ({
   id,
   name,
   icon,
-  action
+  ruta
 });
 
 const SECTIONS = [
-  SECTION(crypto.randomUUID(), 'Mi Area', '📄', () => abrirSection('Mi Area')),
-  SECTION(crypto.randomUUID(), 'Compartidos Conmigo', '🖼️', () => abrirSection('Compartidos Conmigo')),
-  SECTION(crypto.randomUUID(), 'Recientes', '🕒', () => abrirSection('Recientes')),
-  SECTION(crypto.randomUUID(), 'Destacados', '⭐', () => abrirSection('Destacados')),
+  SECTION(crypto.randomUUID(), 'Mi Area', '📄', 'mi-area'),
+  SECTION(crypto.randomUUID(), 'Compartidos Conmigo', '🖼️', '/compartidos-conmigo'),
+  SECTION(crypto.randomUUID(), 'Recientes', '🕒', '/recientes'),
+  SECTION(crypto.randomUUID(), 'Destacados', '⭐', '/destacados'),
 ];
 export default SECTIONS;
