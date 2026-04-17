@@ -1,91 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
-
-/* — Editor wrapper — */
-.editor-wrapper {
-  min-height: 100vh;
-  padding: 60px 24px;
-  background: #f7f6f3;
-}
-
-.editor-container {
-  max-width: 720px;
-  margin: 0 auto;
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 56px 72px 80px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.04);
-}
-
-/* — Título — */
-.editor-title {
-  font-family: 'Lora', Georgia, serif;
-  font-size: 2.6rem;
-  font-weight: 600;
-  color: #1a1a18;
-  border: none;
-  outline: none;
-  width: 100%;
-  background: transparent;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  margin-bottom: 10px;
-}
-
-.editor-title::placeholder { color: #c8c6be; }
-
-.editor-meta {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 300;
-  color: #aaa89e;
-  text-transform: capitalize;
-  letter-spacing: 0.03em;
-  margin-bottom: 32px;
-}
-
-.editor-divider {
-  height: 1px;
-  background: linear-gradient(to right, #e8e6e0, transparent);
-  margin-bottom: 36px;
-}
-
-/* — Botón agregar raíz — */
-.add-root-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 28px;
-  padding: 8px 14px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 400;
-  color: #b5b3ab;
-  background: none;
-  border: 1.5px dashed #dedad3;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 100%;
-  justify-content: center;
-}
-
-.add-root-btn:hover {
-  color: #6b6860;
-  border-color: #c8c6be;
-  background: #faf9f7;
-}
-
-.add-root-icon {
-  font-size: 1rem;
-  line-height: 1;
-}
-
-/* — Bloque — */
+/* — Contenedor — */
 .block-container {
   position: relative;
   margin-bottom: 2px;
-} 
+}
 
+/* — Bloque — */
 .block {
   display: flex;
   align-items: flex-start;
@@ -93,10 +12,16 @@
   padding: 2px 0;
   border-radius: 6px;
   transition: background 0.15s ease;
-  group: true;
 }
 
-.block:hover { background: #faf9f7; }
+.block:hover {
+  background: #faf9f7;
+}
+
+/* Selección */
+.block-selected {
+  background: #f0efe9;
+}
 
 /* — Handle — */
 .handle {
@@ -145,7 +70,7 @@
   background: #efede8;
 }
 
-/* — Hijos indentados — */
+/* — Hijos (indentación) — */
 .block-children {
   padding-left: 28px;
   border-left: 2px solid #f0ede8;
@@ -153,7 +78,7 @@
   margin-top: 2px;
 }
 
-/* — Tipos de bloque — */
+/* — Inputs base — */
 .block-input {
   font-family: 'DM Sans', sans-serif;
   font-size: 0.975rem;
@@ -170,9 +95,11 @@
   caret-color: #6b6860;
 }
 
-.block-input::placeholder { color: #d0cec8; }
+.block-input::placeholder {
+  color: #d0cec8;
+}
 
-/* heading */
+/* — Heading — */
 .block-heading {
   font-family: 'Lora', Georgia, serif;
   font-size: 1.35rem;
@@ -183,7 +110,7 @@
   padding-top: 12px;
 }
 
-/* todo */
+/* — Todo — */
 .block-todo-wrapper {
   display: flex;
   align-items: flex-start;
@@ -206,7 +133,7 @@
   text-decoration: line-through;
 }
 
-/* quote */
+/* — Quote — */
 .block-quote {
   font-family: 'Lora', Georgia, serif;
   font-size: 1.05rem;
@@ -215,5 +142,4 @@
   border-left: 3px solid #e8e4dc;
   padding-left: 16px;
   margin-left: 4px;
-  
 }
