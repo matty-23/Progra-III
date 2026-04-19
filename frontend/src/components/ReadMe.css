@@ -1,6 +1,6 @@
 .readme-container {
     position: relative;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     width: 100%;
 }
 
@@ -19,7 +19,7 @@
     margin-right: 30px;
     resize: none;
     width: 90%;
-    height: auto;
+    height: 80px;
     border: none;
     outline: none;
     background-color: #f3f4f6;

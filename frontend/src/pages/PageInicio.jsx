@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import '../styles/pageInicio.css';
+import BackButton from "../components/BackButton.jsx";
 import Sidebar from "../components/sidebar.jsx";
 import Header from "../components/Header.jsx";
 import { Outlet } from "react-router-dom";
