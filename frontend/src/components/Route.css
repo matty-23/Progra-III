@@ -9,7 +9,6 @@
   display: flex;
   align-items: center;
   border-radius: 8px;
-  margin-bottom: 1.5rem;
 }
 
 .route-breadcrumb {
@@ -35,3 +34,8 @@
 .breadcrumb-segment:hover {
   text-decoration: underline;
 }
+
+.barrastyle {
+  color: '#9ca3af'
+}
+

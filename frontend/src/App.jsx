@@ -1,5 +1,5 @@
 import './App.css'
-import PageInicio from "./pages/pageInicio.jsx";
+import PageInicio from "./pages/PageInicio.jsx";
 import Login from "./pages/Login.jsx";
 import DocumentPageWrapper from "./pages/DocumentPageWrapper.jsx";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -31,8 +31,11 @@ export default function App() {
         credenciales predefinidas
         */}
 
-        <Route path="/:nameUser/:UserId" element={<MiArea/>} />
-
+        <Route path="/:nameUser/:UserId" element={<PageInicio/>}>
+            <Route path="mi-area" element={<MiArea />} >
+              <Route path="*" element={<MiArea />} />
+            </Route>
+        </Route>
       </Routes>
     </BrowserRouter>
     )
