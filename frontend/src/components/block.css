@@ -143,3 +143,17 @@
   padding-left: 16px;
   margin-left: 4px;
 }
+/* Forzar que el navegador respete la cursiva dentro de tu editor */
+.block-base i, 
+.block-base em {
+  font-style: italic !important;
+}
+
+/* De paso, aseguramos la negrita y el subrayado por si acaso */
+.block-base b, 
+.block-base strong {
+  font-weight: bold !important;
+}
+.block-base u {
+  text-decoration: underline !important;
+}
