@@ -4,6 +4,7 @@
   outline: none;     /* Quita el borde azul del navegador */
   width: 100%;       /* Ocupa el espacio restante al lado de la viñeta */
   cursor: text;      /* Pone el cursor en forma de "I" */
+  text-align: left; /* Alineación por defecto */
 }
 
 /* --- Clases dinámicas de alineación --- */

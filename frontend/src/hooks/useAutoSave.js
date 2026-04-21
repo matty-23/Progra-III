@@ -5,14 +5,9 @@ export const useAutoSave = (datosGuardar, funcionGuardado, tiempoEspera = 3000) 
   
   // Usamos useRef para recordar la última versión que guardamos en la BD
   // y no hacer peticiones a la base de datos si no ha cambiado nada.
-  const esPrimerRender = useRef(true);
   const datosAnteriores = useRef(datosGuardar);
 
   useEffect(() => {
-    if (esPrimerRender.current) {
-      esPrimerRender.current = false;
-      return;
-    }
     // Si los datos son exactamente iguales a la última vez, no hacemos nada
     if (datosAnteriores.current === datosGuardar) return;
 

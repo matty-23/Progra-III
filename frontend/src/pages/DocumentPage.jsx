@@ -4,7 +4,6 @@ import { useDocument } from '../hooks/useDocument.js';
 import { useRef, useState } from 'react';
 import { useAutoSave } from '../hooks/useAutoSave.js';
 import { documentService } from '../domain/documentService';
-import documentsData from "../localStorage/arbolBloques.json";
 
 const DocumentPage = ({documentId}) => {
   
@@ -25,7 +24,6 @@ const DocumentPage = ({documentId}) => {
   
   const guardarDatos = async (documentoActualizado) => {
     documentService.save(documentoActualizado);
-    console.log("¡Guardado exitoso usando documentService!");
   };
 
   const estadoGuardado = useAutoSave(doc, guardarDatos, 5000);

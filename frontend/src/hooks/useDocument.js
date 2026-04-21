@@ -1,56 +1,54 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { createBlock, BLOCK_TYPES } from '../models/blockModel';
 import { documentService } from '../domain/documentService';
+import arbolBloques from '../../public/localStorage/arbolBloques.json';
 import {
     updateBlock,
     insertAfter,
     insertAsChild,
-    removeBlock as removeBlockFn,
     removeBlockWithFocus,
     flattenTree,
     indentBlock as indentBlockFn,
 } from '../utils/Utiles';
 
 const DOC_INICIAL = {
-    id: 'doc-new',
     title: 'Mi Documento',
     blocks: [createBlock(BLOCK_TYPES.PARAGRAPH, '¡Bienvenida al editor!')],
 };
 
 export const useDocument = (documentId) => {
     const [doc, setDoc] = useState(null);
-    const isFirstRender = useRef(true);
     const [focusId, setFocusId] = useState(null);
-    const saveTimerRef = useRef(null);
-
     useEffect(() => {
-        const loaded = documentService.loadById(documentId) ?? DOC_INICIAL;
-        isFirstRender.current = true;
-        setDoc(loaded);
+        const guardado = documentService.loadById(documentId);
+        if (guardado) {
+            setDoc(guardado);
+            return;
+        }
+        fetch('/localStorage/arbolBloques.json')
+            .then(res => res.json())
+            .then(data => {
+                const documentoOriginal = data.documents.find(d => d.id === documentId);
+                if (documentoOriginal) {
+                    setDoc(documentoOriginal);
+                } else {
+                    setDoc({ ...DOC_INICIAL, id: documentId });
+                }
+            })
+            .catch(error => {
+                console.error("Error cargando el JSON de prueba:", error);
+                setDoc({ ...DOC_INICIAL, id: documentId });
+            });
+
     }, [documentId]);
 
-    useEffect(() => {
-        const loaded = documentService.loadById(documentId) ?? DOC_INICIAL;
-        setDoc(loaded);
-    }, [documentId]);
-
-  
     const updateContent = (id, newContent) => {
         setDoc(prev => {
             if (!prev) return prev;
-
-            const nextDoc = {
+            return {
                 ...prev,
                 blocks: updateBlock(prev.blocks, id, { content: newContent })
             };
-
-            if (saveTimerRef.current) {
-                clearTimeout(saveTimerRef.current);
-            }
-            saveTimerRef.current = setTimeout(() => {
-                documentService.save(nextDoc);
-            }, 1000);
-            return nextDoc;
         });
     };
 
@@ -74,7 +72,7 @@ export const useDocument = (documentId) => {
 
     const addChild = (parentId) => {
         const newBlock = createBlock();
-        setDoc(prev => ({ ...prev, blocks: insertAsChild(prev.blocks, parentId, newBlock,) }));
+        setDoc(prev => ({ ...prev, blocks: insertAsChild(prev.blocks, parentId, newBlock) }));
     };
 
     const addBlockBelow = (id) => {
@@ -98,14 +96,16 @@ export const useDocument = (documentId) => {
         }));
         setFocusId(id);
     };
+
     const changeType = (id, newType) => {
         setDoc(prev => ({
             ...prev,
             blocks: updateBlock(prev.blocks, id, { type: newType }),
         }));
     };
-    
+
     if (!doc) return { doc: null };
+
     return {
         doc, updateContent, updateMeta, addChild, addBlockBelow, changeType, removeBlock, indentBlock, focusId
     };

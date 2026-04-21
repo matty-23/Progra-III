@@ -1,4 +1,3 @@
-
 const KEY = 'documents';
 
 export const documentService = {
