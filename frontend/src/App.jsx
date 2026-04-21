@@ -5,6 +5,7 @@ import DocumentPageWrapper from "./pages/DocumentPageWrapper.jsx";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ReadMe from "./components/ReadMe.jsx";
 import MiArea from './pages/MiArea.jsx';
+import {Login} from "./pages/Login.jsx";
 
 export default function App() {
     return (
