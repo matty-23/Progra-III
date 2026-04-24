@@ -16,7 +16,6 @@ export default function ContenidoBloque({ block, onUpdate }) {
       onUpdate(block.id, editorRef.current.innerHTML);
     }
   };
-
   return (
     <div className={`block-row type-${block.type}`}>
       
@@ -27,15 +26,13 @@ export default function ContenidoBloque({ block, onUpdate }) {
       {block.type === 'numbered' && (
         <span className="block-prefix numbered"></span> 
       )}
-    <div className="block-row">
       <div
         ref={editorRef}
         contentEditable={true} 
         suppressContentEditableWarning={true} 
         onInput={handleInput} 
-        className={`block-base ${block.type === 'heading' ? 'block-heading' : ''} ${block.type === 'quote' ? 'block-quote' : ''}`}
+        className={`block-base ${block.align || 'left'}  ${block.type === 'heading' ? 'block-heading' : ''} ${block.type === 'quote' ? 'block-quote' : ''}`}
       />
-    </div>
     </div>
   );
 }
