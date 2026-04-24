@@ -13,6 +13,7 @@ import {
 
 const DOC_INICIAL = {
     title: 'Mi Documento',
+    createdAt: Date.now(),
     blocks: [createBlock(BLOCK_TYPES.PARAGRAPH, '¡Bienvenida al editor!')],
 };
 

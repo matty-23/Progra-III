@@ -19,7 +19,7 @@ export const Block = ({
   const handleUpdate = (id, html) => {
     onUpdate(id, html);
   };
-const isProgrammaticFocus = useRef(false);
+  const isProgrammaticFocus = useRef(false);
   const handleToggle = () => {
     onUpdateMeta(block.id, {
       checked: !block.metadata?.checked,
@@ -54,24 +54,24 @@ const isProgrammaticFocus = useRef(false);
   }, [focusId, block.id]);
 
   useEffect(() => {
-  if (focusId === block.id) {
-    const el = inputRef.current;
+    if (focusId === block.id) {
+      const el = inputRef.current;
 
-    isProgrammaticFocus.current = true;
+      isProgrammaticFocus.current = true;
 
-    el?.focus();
-    if (el) {
-      const range = document.createRange();
-      const selection = window.getSelection();
+      el?.focus();
+      if (el) {
+        const range = document.createRange();
+        const selection = window.getSelection();
 
-      range.selectNodeContents(el);
-      range.collapse(false);
+        range.selectNodeContents(el);
+        range.collapse(false);
 
-      selection.removeAllRanges();
-      selection.addRange(range);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     }
-  }
-}, [focusId, block.id]);
+  }, [focusId, block.id]);
 
   // 🧩 --------- RENDER ---------
 
@@ -85,8 +85,13 @@ const isProgrammaticFocus = useRef(false);
         <ContenidoBloque
           block={block}
           onUpdate={handleUpdate}
+          onEnter={handleEnter}
+          onTab={handleTab}
+          onBackspace={handleBackspaceOnEmpty}
+          innerRef={inputRef}
+          onToggle={handleToggle}
         />
-       
+
         <button
           className="add-btn"
           onClick={(e) => {
@@ -111,8 +116,10 @@ const isProgrammaticFocus = useRef(false);
               onRemoveBlock={onRemoveBlock}
               onIndentBlock={onIndentBlock}
               onSelect={onSelect}
-              focusId={focusId}
-              isSelected={focusId === child.id}
+              onEnter={handleEnter}
+              onTab={handleTab}
+              onBackspace={handleBackspaceOnEmpty}
+
             />
           ))}
         </div>

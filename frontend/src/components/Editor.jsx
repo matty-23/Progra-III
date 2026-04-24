@@ -8,14 +8,14 @@ export const Editor = ({ doc, onUpdate, onSelectBlock,selectedBlock, onAddChild,
         <input
           type="text"
           value={doc.title}
-          onChange={(e) => onUpdateMeta?.('title', e.target.value)}
+          onChange={(e) => onUpdateMeta?.('title', { title: e.target.value })}
           className="editor-title"
           placeholder="Sin título"
         />
         <div className="editor-meta">
-          {new Date(doc.createdAt).toLocaleDateString('es-AR', {
+          {doc.createdAt ? new Date(doc.createdAt).toLocaleDateString('es-AR', {
             weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-          })}
+          }) : 'Documento nuevo'}
         </div>
 
         <div className="editor-divider" />

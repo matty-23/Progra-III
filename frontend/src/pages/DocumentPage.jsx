@@ -61,6 +61,8 @@ const DocumentPage = ({documentId}) => {
         selectedBlock={selectedBlock ?? lastSelectedRef.current}
         onChangeType={handleChangeType}
         onUpdateMeta={updateMeta}
+        onIndentBlock={indentBlock}
+        onRemoveBlock={removeBlock}
       />
     </>
   );
