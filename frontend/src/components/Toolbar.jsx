@@ -39,23 +39,9 @@ const TbBtn = ({ title, onClick, className = '', children }) => (
 const Toolbar = ({ selectedBlock, onChangeType, onUpdateMeta }) => {
 
   const applyFormat = (cmd) => {
-    if (!selectedBlock) return;
-
-    const current = selectedBlock.metadata || {};
-
-    const map = {
-      bold: 'bold',
-      italic: 'italic',
-      underline: 'underline',
-    };
-
-    const key = map[cmd];
-
-    onUpdateMeta(selectedBlock.id, {
-      [key]: !current[key],
-    });
+    document.execCommand(cmd, false, null)
   };
-
+//
   const applyAlign = (align) => {
     document.activeElement?.style && (document.activeElement.style.textAlign = align);
     if (selectedBlock) onUpdateMeta(selectedBlock.id, { align });

@@ -1,0 +1,39 @@
+/* --- Área de texto editable --- */
+.block-base {
+  min-height: 1.5em; /* Permite hacer clic aunque esté vacío */
+  outline: none;     /* Quita el borde azul del navegador */
+  width: 100%;       /* Ocupa el espacio restante al lado de la viñeta */
+  cursor: text;      /* Pone el cursor en forma de "I" */
+  text-align: left; /* Alineación por defecto */
+}
+
+/* --- Clases dinámicas de alineación --- */
+.align-left { text-align: left; }
+.align-center { text-align: center; }
+.align-right { text-align: right; }
+/* --- Contenedor de la Fila --- */
+.block-row {
+  display: flex;
+  align-items: flex-start; /* Alinea la viñeta con la primera línea de texto */
+  gap: 8px; /* Espacio entre el punto/número y el texto */
+  width: 100%;
+}
+
+/* --- Estilos del Prefijo (Viñetas y Números) --- */
+.block-prefix {
+  font-weight: 600;
+  color: #6b6860;
+  user-select: none; /* Evita que el usuario sombree el punto por error */
+  margin-top: 2px; /* Alineación óptica con el texto */
+  font-size: 1rem;
+}
+
+.blocks-list, 
+.block-children {
+  counter-reset: lista-numerada;
+}
+
+.block-prefix.numbered::before {
+  counter-increment: lista-numerada;
+  content: counter(lista-numerada) ".";
+}

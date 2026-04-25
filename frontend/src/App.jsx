@@ -1,10 +1,11 @@
 import './App.css'
 import PageInicio from "./pages/PageInicio.jsx";
-import Login from "./pages/Login.jsx";
 import DocumentPageWrapper from "./pages/DocumentPageWrapper.jsx";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ReadMe from "./components/ReadMe.jsx";
 import MiArea from './pages/MiArea.jsx';
+import Login from "./pages/LoginPage.jsx";
+import LoginForm from "./pages/LoginPage.jsx";
 
 export default function App() {
     return (

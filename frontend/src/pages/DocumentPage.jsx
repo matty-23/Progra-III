@@ -2,7 +2,8 @@ import { Editor } from '../components/Editor.jsx';
 import Toolbar from '../components/Toolbar.jsx';
 import { useDocument } from '../hooks/useDocument.js';
 import { useRef, useState } from 'react';
-import documentsData from "../../public/localStorage/arbolBloques.json";
+import { useAutoSave } from '../hooks/useAutoSave.js';
+import { documentService } from '../domain/documentService';
 
 const DocumentPage = ({documentId}) => {
   
@@ -20,6 +21,12 @@ const DocumentPage = ({documentId}) => {
     updateMeta,
     focusId
   } = useDocument(documentId);
+  
+  const guardarDatos = async (documentoActualizado) => {
+    documentService.save(documentoActualizado);
+  };
+
+  const estadoGuardado = useAutoSave(doc, guardarDatos, 5000);
 
   const handleSelectBlock = (block) => {
     lastSelectedRef.current = block;

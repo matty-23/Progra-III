@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import './Block.css';
-import BlockContent from './BlockContent.jsx';
+import ContenidoBloque from './ContenidoBloque.jsx';
 
 export const Block = ({
   block,
@@ -82,20 +82,11 @@ const isProgrammaticFocus = useRef(false);
         onClick={() => onSelect(block)}
       >
         <span className="handle">⠿</span>
-
-        <BlockContent
+        <ContenidoBloque
           block={block}
-          inputRef={inputRef}
-          onToggle={handleToggle}
-          onEnter={handleEnter}
-          onBlur={handleUpdate}
-          onUpdate={handleUpdate}  
-          onTab={handleTab}
-          onBackspaceOnEmpty={handleBackspaceOnEmpty}
-
-          onFocus={() => onSelect(block)}
+          onUpdate={handleUpdate}
         />
-
+       
         <button
           className="add-btn"
           onClick={(e) => {
