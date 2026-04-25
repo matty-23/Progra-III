@@ -145,20 +145,3 @@ export const useUsers = () => {
     editRow
   };
 };
-
-export const Login = () => {
-  const {
-    credentials,
-    error,
-    handleChangeLogin,
-    handleSubmitLogin,
-    setView
-  } = useUsers();
-
-  return (
-    <form onSubmit={handleSubmitLogin}>
-      ...
-    </form>
-  );
-};
-
