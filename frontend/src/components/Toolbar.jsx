@@ -36,14 +36,13 @@ const TbBtn = ({ title, onClick, className = '', children }) => (
   </button>
 );
 
-const Toolbar = ({ selectedBlock, onChangeType, onUpdateMeta }) => {
+const Toolbar = ({ selectedBlock, onChangeType, onUpdateMeta,onIndentBlock, onRemoveBlock  }) => {
 
   const applyFormat = (cmd) => {
     document.execCommand(cmd, false, null)
   };
 //
   const applyAlign = (align) => {
-    document.activeElement?.style && (document.activeElement.style.textAlign = align);
     if (selectedBlock) onUpdateMeta(selectedBlock.id, { align });
   };
 
@@ -102,7 +101,11 @@ const Toolbar = ({ selectedBlock, onChangeType, onUpdateMeta }) => {
             {icon}
           </TbBtn>
         ))}
-        <TbBtn title="Indentar">
+        {/* BOTÓN INDENTAR CONFIGURADO */}
+        <TbBtn 
+          title="Indentar" 
+          onClick={() => selectedBlock && onIndentBlock(selectedBlock.id)}
+        >
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
             <line x1="2" y1="4" x2="14" y2="4" /><polyline points="6,8 10,10 6,12" /><line x1="10" y1="10" x2="2" y2="10" />
           </svg>
@@ -111,13 +114,13 @@ const Toolbar = ({ selectedBlock, onChangeType, onUpdateMeta }) => {
 
       <Sep />
 
+      {/* BOTÓN ELIMINAR CONFIGURADO (y botón de duplicar borrado) */}
       <div className="toolbar-group">
-        <TbBtn title="Duplicar bloque">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <rect x="5" y="5" width="8" height="8" rx="2" /><path d="M3 11V3h8" />
-          </svg>
-        </TbBtn>
-        <TbBtn title="Eliminar bloque" className="danger">
+        <TbBtn 
+          title="Eliminar bloque" 
+          className="danger" 
+          onClick={() => selectedBlock && onRemoveBlock(selectedBlock.id)}
+        >
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
             <polyline points="3,4 13,4" /><path d="M5,4 V3 Q5,2 6,2 h4 Q11,2 11,3 V4" />
             <line x1="6" y1="7" x2="6" y2="12" /><line x1="8" y1="7" x2="8" y2="12" /><line x1="10" y1="7" x2="10" y2="12" />

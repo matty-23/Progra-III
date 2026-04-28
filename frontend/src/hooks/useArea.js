@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
 import traerJson from "../domain/archivoService.js";
+import { documentService } from "../domain/documentService.js";
 
 export default async function buscarArchivosporRuta(ruta) {
   const archivos = buscarElementoPorRuta(await traerJson(), ruta);
-  const matty=archivos.map(el => ({
-    name: el.name,
-    type: el.type
-  }));
-  
-  return archivos.map(el => ({
-    name: el.name,
-    type: el.type
-  }));
+  const store = documentService.getStore();
+  const documentosGuardados = store.documents || [];
+ return archivos.map(el => {
+    if (el.type === "document") {
+      const guardado = documentosGuardados.find(d => d.id === el.documentId);
+      return {
+        ...el,
+        name: guardado ? guardado.title : el.name // Si existe, usamos el título nuevo
+      };
+    }
+    return el;
+  });
 }
 
 function buscarElementoPorRuta(root, path) {
