@@ -35,7 +35,7 @@ export default function App() {
         <Route path="/:nameUser/:UserId" element={<PageInicio/>}>
             <Route path="mi-area" element={<MiArea />} >
               <Route path="*" element={<MiArea />} />
-            </Route>
+              </Route>
         </Route>
       </Routes>
     </BrowserRouter>

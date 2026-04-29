@@ -1,18 +1,24 @@
 import SectionButton from "./SectionButton";
 import SECTIONS from "../models/sectionModel";
-import { useNavigate, useParams } from "react-router-dom";
-import { useState} from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import './Sidebar.css';
 
 export default function Sidebar() {
   const { nameUser, UserId } = useParams();
-  const [activeSection, setActiveSection] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation(); // 1. Obtenemos la URL actual
 
   const handleClick = (section) => {
-    setActiveSection(section.name);
-    navigate(`/${nameUser}/${UserId}/${section.ruta}`);
+    // Limpiamos la barra inicial por si la ruta del modelo ya la trae (ej: "/recientes")
+    const rutaLimpia = section.ruta.startsWith('/') 
+      ? section.ruta.substring(1) 
+      : section.ruta;
+      
+    navigate(`/${nameUser}/${UserId}/${rutaLimpia}`);
   };
+
+  // 2. Buscamos qué sección coincide con la URL actual
+  const activeSection = SECTIONS.find(sec => location.pathname.includes(sec.ruta))?.name;
 
   return (
     <div className="sidebar">
@@ -36,6 +42,7 @@ export default function Sidebar() {
           <SectionButton
             key={section.name}
             section={section}
+            // 3. Comparamos directamente con el nombre de la sección encontrada
             isActive={activeSection === section.name}
             onClick={() => handleClick(section)}
           />
@@ -43,7 +50,6 @@ export default function Sidebar() {
       </nav>
       
       <div className="sidebar-footer">
-         {/* Aquí podrías poner el indicador de almacenamiento si quisieras */}
       </div>
     </div>
   );

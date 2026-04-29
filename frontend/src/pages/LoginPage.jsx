@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUsers } from "../hooks/useUsuario.js";
 import "../styles/Login.css";
@@ -18,7 +19,7 @@ export default function Login() {
     if (isAuthenticated) {
       const nameUser = "maira";
       const UserId = 123;
-      navigate(`/${nameUser}/${UserId}`);
+      navigate(`/${nameUser}/${UserId}/mi-area`);
     }
   }, [isAuthenticated, navigate]);
 
