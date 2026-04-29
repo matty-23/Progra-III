@@ -1,20 +1,22 @@
 .header {
-  padding: 15px 30px;
+  padding: 12px 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #C8D9E6; /* Sky Blue */
-  background-color: #FFFFFF;
+  background-color: #1e1f22; /* Mismo color que el Sidebar */
+  color: white;
+  border-bottom: 1px solid #2b2c31; /* Divisor muy sutil */
 }
 
 .search-bar {
-  background-color: #F5EFEB; /* Beige */
-  border-radius: 50px;
-  padding: 10px 20px;
-  width: 400px;
+  background-color: #2b2c31; /* Fondo más oscuro para la barra */
+  border-radius: 8px;
+  padding: 6px 16px;
+  width: 500px;
   display: flex;
   align-items: center;
   gap: 10px;
+  border: 1px solid #3f4045;
 }
 
 .search-bar input {
@@ -22,12 +24,12 @@
   background: transparent;
   outline: none;
   width: 100%;
-  font-size: 0.95rem;
-  color: #2F4156; /* Navy */
+  font-size: 0.9rem;
+  color: #ffffff;
 }
 
 .search-bar input::placeholder {
-  color: #567C8D; /* Teal */
+  color: #a3a3a3;
 }
 
 .header-right {
@@ -36,23 +38,7 @@
   gap: 20px;
 }
 
+/* Ocultamos el perfil del Header ya que ahora irá en la tarjeta del Sidebar */
 .user-profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 500;
-  color: #2F4156; /* Navy */
-}
-
-.avatar {
-  width: 32px;
-  height: 32px;
-  background-color: #567C8D; /* Teal */
-  color: #FFFFFF; /* White */
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: bold;
+  display: none; 
 }

@@ -1,72 +1,50 @@
 .card {
-  width: 100% !important; /* Ahora ocupa bien el ancho de su columna en la grilla */
-  max-width: 180px; 
-  background-color: #FFFFFF;
-  border: 1px solid #C8D9E6; /* Borde sutil color Sky Blue */
-  border-radius: 12px; /* Esquinas más redondeadas y modernas */
-  overflow: hidden; /* Evita que el fondo sobresalga de las esquinas */
-  transition: all 0.25s ease; /* Animación suave */
-  box-shadow: 0 2px 6px rgba(47, 65, 86, 0.05); /* Sombra súper ligerita Navy */
+  width: 100% !important;
+  max-width: 220px; 
+  background-color: #e7e5e1;
+  border: 1px solid #dadce0; 
+  border-radius: 6px; 
+  overflow: hidden; 
+  transition: border-color 0.2s, box-shadow 0.2s; 
   display: flex;
   flex-direction: column;
 }
 
-/* Efecto al pasar el mouse (Hover) */
 .card:hover {
-  transform: translateY(-4px); /* La tarjeta "flota" hacia arriba */
-  box-shadow: 0 8px 16px rgba(47, 65, 86, 0.12); /* Sombra más fuerte */
-  border-color: #567C8D; /* El borde cambia a Teal */
+  border-color: #1a73e8; /* Borde azul al interactuar */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); 
   cursor: pointer;
+  /* Quitamos el transform de salto para que sea más profesional y estático */
 }
 
 .folder-preview, .preview {
-  height: 110px;
-  background: #F5EFEB; /* Fondo de previsualización color Beige */
+  height: 180px;
+  background: #eceae4; 
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid rgba(200, 217, 230, 0.4); /* Línea divisoria suave */
-}
-
-.folder-preview img {
-  width: 65px; /* Icono un pelín más pequeño y estético */
-  height: auto;
-  transition: transform 0.3s ease;
-}
-
-.preview img {
-  width: 80%;
-  height: 80%;
-  object-fit: contain;
-  transition: transform 0.3s ease;
-}
-
-/* Pequeño toque: el icono crece un poquito al hacer hover en la tarjeta */
-.card:hover .folder-preview img,
-.card:hover .preview img {
-  transform: scale(1.08);
+  border-bottom: 1px solid #f1f3f4; 
 }
 
 .info {
-  padding: 12px;
-  background-color: #FFFFFF;
+  padding: 10px 12px;
+  background-color: #f8f9fa; /* La franja gris clara de abajo */
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: 8px;
 }
 
 .title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #2F4156; /* Título color Navy */
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #3c4043;
   margin: 0;
-  white-space: nowrap; /* Evita que el título baje a dos líneas si es largo */
+  white-space: nowrap; 
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* Ocultamos la meta para igualar el minimalismo de la foto */
 .meta {
-  font-size: 0.75rem;
-  color: #567C8D; /* Texto secundario color Teal */
-  font-weight: 400;
+  display: none; 
 }
