@@ -1,23 +1,10 @@
+.grid-container {
+  margin-top: 10px;
+}
+
 .grid {
   display: grid;
-  /* Usar minmax hace que se ajusten al espacio sin dejar márgenes gigantes */
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
-  gap: 12px; /* Reducimos el margen entre tarjetas */
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+  gap: 20px; /* Separación amplia entre tarjetas */
   padding: 10px 0;
-}
-
-.btn-back {
-  margin-bottom: 16px;
-  padding: 8px 12px;
-  background-color: #567C8D; /* Color Teal de tu paleta */
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.2s;
-}
-
-.btn-back:hover {
-  background-color: #2F4156; /* Navy al pasar el mouse */
 }
