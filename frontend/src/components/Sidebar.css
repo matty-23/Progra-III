@@ -1,7 +1,7 @@
 .sidebar {
   width: 250px;
-  background-color: #1f2937; /* Gris oscuro */
-  color: #d1d5db;
+  background-color: #2F4156; /* Navy */
+  color: #F5EFEB; /* Beige claro para contrastar */
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -13,13 +13,13 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 40px;
-  color: white;
+  color: #FFFFFF;
   font-weight: bold;
   font-size: 1.2rem;
 }
 
 .sidebar-logo {
-  background-color: #3b82f6;
+  background-color: #567C8D; /* Teal */
   width: 35px;
   height: 35px;
   border-radius: 8px;
@@ -43,40 +43,41 @@
   gap: 12px;
   transition: 0.2s;
   font-size: 0.95rem;
+  color: #C8D9E6; /* Sky Blue pálido para el texto inactivo */
 }
 
 .sidebar nav p:hover {
-  background-color: #374151;
-  color: white;
+  background-color: rgba(86, 124, 141, 0.4); /* Teal con transparencia */
+  color: #FFFFFF;
 }
 
 .sidebar nav p.active {
-  background-color: #111827; /* Más oscuro para el activo */
-  color: white;
+  background-color: #567C8D; /* Teal */
+  color: #FFFFFF;
   font-weight: 500;
 }
 
 .sidebar-footer {
   margin-top: auto;
-  border-top: 1px solid #374151;
+  border-top: 1px solid #567C8D; /* Teal */
   padding-top: 20px;
 }
 
 .storage-label {
   font-size: 0.8rem;
   margin-bottom: 8px;
-  color: #9ca3af;
+  color: #C8D9E6; /* Sky Blue */
 }
 
 .storage-bar {
   height: 6px;
-  background-color: #374151;
+  background-color: rgba(200, 217, 230, 0.2); /* Fondo sutil */
   border-radius: 3px;
   overflow: hidden;
 }
 
 .storage-fill {
-  width: 40%; /* Simulando el 4.2GB de 10GB */
-  background-color: #3b82f6;
+  width: 40%; 
+  background-color: #C8D9E6; /* Sky Blue */
   height: 100%;
 }
