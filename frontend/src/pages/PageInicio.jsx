@@ -30,15 +30,14 @@ export default function PageInicio() {
         <div className="app">
             <Sidebar />
             <div className="main">
-                <Header />
-                <div>
-                    <div className="route">
-                    <Route path={currentPath} />
-                    </div>
-
-                    <Outlet />
-                </div>
-            </div>
+    <Header />
+    <div className="content-area">  {/* <--- Agregamos la clase aquí */}
+        <div className="route">
+            <Route path={currentPath} />
+        </div>
+        <Outlet />
+    </div>
+</div>
         </div>
     );
 }

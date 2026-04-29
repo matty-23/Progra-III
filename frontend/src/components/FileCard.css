@@ -1,46 +1,72 @@
-
 .card {
-  width: 160px !important;
-  min-width: 100px;
-  max-width: 160px;
+  width: 100% !important; /* Ahora ocupa bien el ancho de su columna en la grilla */
+  max-width: 180px; 
+  background-color: #FFFFFF;
+  border: 1px solid #C8D9E6; /* Borde sutil color Sky Blue */
+  border-radius: 12px; /* Esquinas más redondeadas y modernas */
+  overflow: hidden; /* Evita que el fondo sobresalga de las esquinas */
+  transition: all 0.25s ease; /* Animación suave */
+  box-shadow: 0 2px 6px rgba(47, 65, 86, 0.05); /* Sombra súper ligerita Navy */
+  display: flex;
+  flex-direction: column;
 }
 
+/* Efecto al pasar el mouse (Hover) */
 .card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.folder-preview {
-  height: 110px;
+  transform: translateY(-4px); /* La tarjeta "flota" hacia arriba */
+  box-shadow: 0 8px 16px rgba(47, 65, 86, 0.12); /* Sombra más fuerte */
+  border-color: #567C8D; /* El borde cambia a Teal */
+  cursor: pointer;
 }
 
-.folder-preview img {
-  width: 90px; /* antes 80px ❌ */
-  height: 100px;
-}
-.preview {
+.folder-preview, .preview {
   height: 110px;
-  background: #f3f4f6;
+  background: #F5EFEB; /* Fondo de previsualización color Beige */
   display: flex;
   align-items: center;
   justify-content: center;
+  border-bottom: 1px solid rgba(200, 217, 230, 0.4); /* Línea divisoria suave */
+}
+
+.folder-preview img {
+  width: 65px; /* Icono un pelín más pequeño y estético */
+  height: auto;
+  transition: transform 0.3s ease;
 }
 
 .preview img {
-  width: 90%;
-  height: 90%;
-  object-fit: cover;
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
 }
+
+/* Pequeño toque: el icono crece un poquito al hacer hover en la tarjeta */
+.card:hover .folder-preview img,
+.card:hover .preview img {
+  transform: scale(1.08);
+}
+
 .info {
-  padding: 10px;
+  padding: 12px;
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .title {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #111827;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2F4156; /* Título color Navy */
   margin: 0;
+  white-space: nowrap; /* Evita que el título baje a dos líneas si es largo */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .meta {
-  font-size: 0.8rem;
-  color: #6b7280;
+  font-size: 0.75rem;
+  color: #567C8D; /* Texto secundario color Teal */
+  font-weight: 400;
 }

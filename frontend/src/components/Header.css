@@ -3,12 +3,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #e5e7eb;
-  background-color: white;
+  border-bottom: 1px solid #C8D9E6; /* Sky Blue */
+  background-color: #FFFFFF;
 }
 
 .search-bar {
-  background-color: #f3f4f6;
+  background-color: #F5EFEB; /* Beige */
   border-radius: 50px;
   padding: 10px 20px;
   width: 400px;
@@ -23,6 +23,11 @@
   outline: none;
   width: 100%;
   font-size: 0.95rem;
+  color: #2F4156; /* Navy */
+}
+
+.search-bar input::placeholder {
+  color: #567C8D; /* Teal */
 }
 
 .header-right {
@@ -36,13 +41,14 @@
   align-items: center;
   gap: 10px;
   font-weight: 500;
+  color: #2F4156; /* Navy */
 }
 
 .avatar {
   width: 32px;
   height: 32px;
-  background-color: #bfdbfe;
-  color: #1e40af;
+  background-color: #567C8D; /* Teal */
+  color: #FFFFFF; /* White */
   border-radius: 50%;
   display: flex;
   align-items: center;
