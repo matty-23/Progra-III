@@ -116,6 +116,7 @@ export const Block = ({
               onRemoveBlock={onRemoveBlock}
               onIndentBlock={onIndentBlock}
               onSelect={onSelect}
+              focusId={focusId}
               onEnter={handleEnter}
               onTab={handleTab}
               onBackspace={handleBackspaceOnEmpty}

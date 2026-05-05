@@ -41,8 +41,7 @@ const DocumentPage = ({documentId}) => {
   if (!doc) return <div>Cargando documento...</div>;
   return (
     <>
-      <div
-      >
+      <div className="main">
         <Editor
           doc={doc}
           onUpdate={updateContent}

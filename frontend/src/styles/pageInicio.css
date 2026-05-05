@@ -8,7 +8,6 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   background-color: #1e1f22; /* Fondo oscuro base */
   color: #202124;
-  overflow: hidden; 
 }
 
 .app {
@@ -16,6 +15,7 @@ body {
   height: 100vh;
   width: 100vw;
   background-color: #1e1f22;
+  overflow: hidden;
 }
 
 .main {
@@ -23,10 +23,9 @@ body {
   background-color: #1e1f22; /* El fondo detrás de la hoja blanca */
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
-/* LA HOJA BLANCA CON ESQUINA CURVA */
+
 .content-area {
   flex: 1;
   background-color: #ffffff;
@@ -34,8 +33,9 @@ body {
   border-top: 1px solid rgba(255, 255, 255, 0.15); /* Línea blanca finita superior */
   border-left: 1px solid rgba(255, 255, 255, 0.15); /* Línea blanca finita lateral */
   padding: 40px 50px; /* Esto empuja las tarjetas para que no choquen a la izquierda */
-  overflow-y: auto; 
+  overflow-y: auto;
   margin-left: 2px; /* Un pequeñísimo margen para que se note el borde */
+  min-height: 0; /* ⚠️ CLAVE: Permite que el hijo flex se encoja y active el scroll */
 }
 
 .title-row {
