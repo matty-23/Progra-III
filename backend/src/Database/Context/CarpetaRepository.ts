@@ -1,5 +1,6 @@
 import { CarpetaModel } from '../Schemes/CarpetaScheme.js';
 import { Carpeta } from '../../Models/Carpeta.js';
+import mongoose from 'mongoose';
 import type { ICarpetaScheme } from '../../Interfaces/ICarpetaScheme.js';
 
 export class CarpetaRepository {
@@ -14,11 +15,11 @@ export class CarpetaRepository {
             carpeta.idUsuario,
             carpeta.idPadre,
             carpeta.ReadMe
-        );
+        ); 
     }
 
     
-    async crear(carpeta: Carpeta): Promise<Carpeta> {
+    async crear(carpeta: Carpeta): Promise<mongoose.Types.ObjectId>{
         const nuevaCarpeta = new CarpetaModel({
             id: carpeta.getId(),
             nombre: carpeta['nombre'],
@@ -31,7 +32,7 @@ export class CarpetaRepository {
         });
 
         const docGuardado = await nuevaCarpeta.save();
-        return this.convertirADominio(docGuardado);
+        return docGuardado._id;
     }
 
     
