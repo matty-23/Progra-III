@@ -1,0 +1,104 @@
+.create-button {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+
+    background-color: white;
+    color: #333;
+
+    border: none;
+    border-radius: 999px;
+
+    padding: 18px 32px;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.15),
+        0 3px 8px rgba(0, 0, 0, 0.1);
+
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+.create-button:hover {
+    transform: translateY(-3px);
+    background-color: #fafafa;
+}
+
+.create-button:active {
+    transform: translateY(0);
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    width: 320px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.modal h3 {
+    margin: 0;
+    text-align: center;
+}
+
+.modal input,
+.modal select {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    margin-top: 8px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.cancel-btn {
+    padding: 8px 14px;
+    border: none;
+    background: #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.confirm-btn {
+    padding: 8px 14px;
+    border: none;
+    background: #4f46e5;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.confirm-btn:hover {
+    background: #4338ca;
+}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import CreateButton from "./CreateButton";
 import FileCard from "./FileCard";
 import "./FileGrid.css";
 import { useNavigate } from "react-router-dom";
@@ -37,7 +38,7 @@ export default function FileGrid({ data}) {
           <FileCard key={i} file={file} onClick={handleClick} />
         ))}
       </div>
-
+        <CreateButton/>
     </div>
   );
 }

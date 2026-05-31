@@ -6,36 +6,45 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background-color: #1e1f22; /* Fondo oscuro base */
+  background-color: #1e1f22;
   color: #202124;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 .app {
   display: flex; 
-  height: 100vh;
+  height: 100dvh; 
   width: 100vw;
   background-color: #1e1f22;
-  overflow: hidden;
+  overflow: hidden; 
 }
 
 .main {
   flex: 1;
-  background-color: #1e1f22; /* El fondo detrás de la hoja blanca */
+  background-color: #1e1f22;
   display: flex;
   flex-direction: column;
+  overflow: hidden; 
 }
-
 
 .content-area {
   flex: 1;
   background-color: #ffffff;
-  border-top-left-radius: 16px; /* La esquina curvada */
-  border-top: 1px solid rgba(255, 255, 255, 0.15); /* Línea blanca finita superior */
-  border-left: 1px solid rgba(255, 255, 255, 0.15); /* Línea blanca finita lateral */
-  padding: 40px 50px; /* Esto empuja las tarjetas para que no choquen a la izquierda */
+  border-top-left-radius: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  padding: clamp(20px, 4vw, 50px); /* Padding más flexible */
+  margin-left: 2px;
+  
   overflow-y: auto;
-  margin-left: 2px; /* Un pequeñísimo margen para que se note el borde */
-  min-height: 0; /* ⚠️ CLAVE: Permite que el hijo flex se encoja y active el scroll */
+  min-height: 0; 
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+.content-area::-webkit-scrollbar {
+  display: none;
 }
 
 .title-row {
@@ -44,4 +53,6 @@ body {
   align-items: center;
   margin-top: 10px;
   margin-bottom: 20px;
+  flex-wrap: wrap; 
+  gap: 10px;
 }
