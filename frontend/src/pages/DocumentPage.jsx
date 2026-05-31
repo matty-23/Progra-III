@@ -3,7 +3,7 @@ import Toolbar from '../components/Toolbar.jsx';
 import { useDocument } from '../hooks/useDocument.js';
 import { useRef, useState } from 'react';
 import { useAutoSave } from '../hooks/useAutoSave.js';
-import { documentService } from '../domain/documentService';
+import { documentService } from '../services/documentService.js';
 
 const DocumentPage = ({documentId}) => {
   

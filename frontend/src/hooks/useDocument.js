@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createBlock, BLOCK_TYPES } from '../models/blockModel';
-import { documentService } from '../domain/documentService';
+import { documentService } from '../services/documentService';
 import arbolBloques from '../../public/localStorage/arbolBloques.json';
 import {
     updateBlock,
