@@ -4,6 +4,7 @@ export const useUsers = () => {
 
   // USERS
   const [users, setUsers] = useState([
+    { id: 2, name: 'Maira', username: 'holaa' },
     { id: 1, name: 'Tania', username: 'floppydiskette' }
   ]);
 

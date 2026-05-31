@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import traerJson from "../domain/archivoService.js";
-import { documentService } from "../domain/documentService.js";
+import traerJson from "../services/archivoService.js";
+import { documentService } from "../services/documentService.js";
 
 export default async function buscarArchivosporRuta(ruta) {
   const archivos = buscarElementoPorRuta(await traerJson(), ruta);
