@@ -1,10 +1,6 @@
-const API_URL = 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const archivoService = {
-  /**
-   * Llama al BFF y retorna las carpetas principales del usuario.
-   * Respuesta: { MiArea: [], CompartidosConmigo: [], Recientes: [], Destacados: [] }
-   */
   async obtenerCarpetasPrincipales(idUsuario) {
     const token = localStorage.getItem('token');
 
@@ -21,12 +17,8 @@ export const archivoService = {
     }
 
     return response.json();
-    // Retorna: { MiArea: [...], CompartidosConmigo: [...], Recientes: [...], Destacados: [...] }
   },
 
-  /**
-   * Obtiene el contenido (hijos) de una carpeta específica.
-   */
   async obtenerContenidoCarpeta(idCarpeta) {
     const token = localStorage.getItem('token');
 

@@ -66,7 +66,7 @@ export const useUsers = () => {
 
     if (user.password !== user.confirmPassword) {
       setError('Las contraseñas no coinciden');
-      return;
+      return false;
     }
 
     try {
@@ -81,8 +81,10 @@ export const useUsers = () => {
       setError('');
       setView('login');
       alert("Registro exitoso. Ahora puedes iniciar sesión.");
+      return true;
     } catch (err) {
       setError('Error al registrar. Verifica los datos.');
+      return false;
     }
   };
 

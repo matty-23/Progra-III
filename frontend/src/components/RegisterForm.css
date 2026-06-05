@@ -1,40 +1,29 @@
-/* Contenedor principal que ocupa toda la pantalla */
-.login-wrapper {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f8f9fa; /* Gris muy claro, limpio */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-}
-
-/* La tarjeta blanca central */
-.login-box {
+.register-box {
   background: #ffffff;
   padding: 40px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
   border: 1px solid #dadce0;
+  box-sizing: border-box;
 }
 
-.login-title {
+.register-title {
   text-align: center;
   color: #202124;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   font-size: 1.5rem;
   font-weight: 600;
 }
 
-.login-form {
+.register-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
-.login-error {
+.register-error {
   color: #d93025;
   background-color: #fce8e6;
   padding: 10px;
@@ -44,7 +33,16 @@
   text-align: center;
 }
 
-.input-group label {
+.input-row {
+  display: flex;
+  gap: 12px;
+}
+
+.input-row .register-input-group {
+  flex: 1;
+}
+
+.register-input-group label {
   display: block;
   margin-bottom: 6px;
   font-size: 0.85rem;
@@ -52,7 +50,7 @@
   font-weight: 500;
 }
 
-.input-group input {
+.register-input-group input {
   width: 100%;
   padding: 10px 12px;
   font-size: 0.95rem;
@@ -63,38 +61,45 @@
   box-sizing: border-box;
 }
 
-.input-group input:focus {
+.register-input-group input:focus {
   border-color: #1a73e8;
 }
 
-.btn-primary {
+.btn-register {
   margin-top: 10px;
   padding: 12px;
   font-size: 0.95rem;
   font-weight: 500;
   color: white;
-  background-color: #1a73e8; /* Azul primario estilo SaaS */
+  background-color: #1a73e8;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
-.btn-primary:hover {
+.btn-register:hover {
   background-color: #1557b0;
 }
 
-.login-hint {
+.register-footer {
   margin-top: 25px;
   text-align: center;
-  font-size: 0.8rem;
-  color: #80868b;
+  font-size: 0.85rem;
+  color: #5f6368;
 }
+
 .register-link {
   color: #1a73e8;
-  cursor: pointer;
   font-weight: 500;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 5px;
+  font-size: 0.85rem;
 }
+
 .register-link:hover {
   text-decoration: underline;
 }

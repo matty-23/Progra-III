@@ -1,6 +1,7 @@
-const API_URL = 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const authApiService = {
+
   async login(username, password) {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
@@ -12,7 +13,7 @@ export const authApiService = {
       throw new Error('Credenciales inválidas');
     }
     
-    return response.json(); // Retorna { accessToken, refreshToken, idUsuario, username }
+    return response.json(); 
   },
 
   async register(userData) {

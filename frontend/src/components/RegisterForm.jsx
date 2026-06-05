@@ -1,81 +1,56 @@
 import React from 'react';
-import { useRegister } from '../hooks/useUsuario';
+import './RegisterForm.css'; 
 
-const RegisterForm = ({  user,
-  error,
-  handleChangeRegister,
-  handleSubmitRegister,
-  onGoToLogin }) => {
-
+export default function RegisterForm({ user, error, onChange, onSubmit, onGoToLogin }) {
   return (
-    <div className="register-container">
-      <div className="card shadow register-card">
-        <h2 className="register-title">Registro</h2>
+    <div className="register-box">
+      <h2 className="register-title">Crear Cuenta</h2>
 
-        <form onSubmit={handleSubmit}>
-          {error && (
-            <div className="alert alert-danger register-error">
-              {error}
-            </div>
-          )}
+      <form onSubmit={onSubmit} className="register-form">
+        {error && <div className="register-error">{error}</div>}
 
-          <div className="mb-3">
-            <label className="form-label">Email</label>
-            <input
-              type="email"
-              name="email"
-              className="form-control"
-              required
-              value={user.email}
-              onChange={handleChange}
-            />
+        <div className="input-row">
+          <div className="register-input-group">
+            <label>Nombre</label>
+            <input type="text" name="nombre" required value={user.nombre}onChange={onChange}/>
           </div>
-
-          <div className="mb-3">
-            <label className="form-label">Contraseña</label>
-            <input
-              type="password"
-              name="password"
-              className="form-control"
-              required
-              value={user.password}
-              onChange={handleChange}
-            />
+          <div className="register-input-group">
+            <label>Apellido</label>
+            <input type="text" name="apellido" required value={user.apellido} onChange={onChange}/>
           </div>
+        </div>
 
-          <div className="mb-3">
-            <label className="form-label">Confirmar Contraseña</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              className="form-control"
-              required
-              value={user.confirmPassword}
-              onChange={handleChange}
-            />
-          </div>
+        <div className="register-input-group">
+          <label>Nombre de Usuario</label>
+          <input type="text" name="username" required value={user.username} onChange={onChange}/>
+        </div>
 
-          <button
-            type="submit"
-            className="btn btn-success register-button"
-          >
-            Registrarse
+        <div className="register-input-group">
+          <label>Email</label>
+          <input type="email" name="email" required value={user.email} onChange={onChange}/>
+        </div>
+
+        <div className="register-input-group">
+          <label>Contraseña</label>
+          <input type="password" name="password" required value={user.password} onChange={onChange}/>
+        </div>
+
+        <div className="register-input-group">
+          <label>Confirmar Contraseña</label>
+          <input type="password" name="confirmPassword" required value={user.confirmPassword} onChange={onChange}/>
+        </div>
+
+        <button type="submit" className="btn-register">
+          Registrarse
+        </button>
+
+        <p className="register-footer">
+          ¿Ya tienes cuenta?
+          <button type="button" className="register-link" onClick={onGoToLogin}>
+            Inicia Sesión aquí
           </button>
-
-          <p className="register-footer">
-            ¿Ya tienes cuenta?
-            <button
-              type="button"
-              className="btn btn-link p-0 ms-1"
-              onClick={onGoToLogin}
-            >
-              Inicia Sesión
-            </button>
-          </p>
-        </form>
-      </div>
+        </p>
+      </form>
     </div>
   );
-};
-
-export default RegisterForm;
+}

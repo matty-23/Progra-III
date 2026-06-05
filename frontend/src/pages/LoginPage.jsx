@@ -62,6 +62,12 @@ export default function Login() {
         <p className="login-hint">
           <em>Datos de prueba: admin@correo.com / 123</em>
         </p>
+
+        <p className="login-hint">
+          ¿No tienes cuenta? <span className="register-link" onClick={() => navigate("/register")}>
+            Regístrate
+          </span>
+        </p>
       </div>
     </div>
   );
