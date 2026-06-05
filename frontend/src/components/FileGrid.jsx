@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
 import FileCard from "./FileCard";
 import "./FileGrid.css";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-export default function FileGrid({ data}) {
-
+export default function FileGrid({ data }) {
   const [files, setFiles] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
-  const currentPath = location.pathname;
 
   useEffect(() => {
     if (data?.children) {
@@ -18,26 +15,29 @@ export default function FileGrid({ data}) {
   }, [data]);
 
   const handleClick = (file) => {
+    const tipo   = file.tipo  ?? file.type;
+    const nombre = file.nombre ?? file.name;
 
-    if (file.type === "folder") {
-      const newPath = `${currentPath}/${file.name}`.replace("//", "/");
+    if (tipo === "folder" || tipo === "carpeta") {
+      // Navegamos por id si está disponible, si no por nombre
+      const segmento = file.id ?? nombre;
+      const newPath = `${location.pathname}/${segmento}`.replace("//", "/");
       navigate(newPath);
     }
 
-    if (file.type === "document") {
-      window.open(`/document/${file.documentId}`, "_blank");
-      
+    if (tipo === "document" || tipo === "documento") {
+      const docId = file.id ?? file.documentId;
+      window.open(`/document/${docId}`, "_blank");
     }
   };
 
   return (
     <div className="grid-container">
       <div className="grid">
-        {files.map((file, i) => (
-          <FileCard key={i} file={file} onClick={handleClick} />
+        {files.map((file) => (
+          <FileCard key={file.id ?? file.nombre ?? file.name} file={file} onClick={handleClick} />
         ))}
       </div>
-
     </div>
   );
 }

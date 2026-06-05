@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createBlock, BLOCK_TYPES } from '../models/blockModel';
-import { documentService } from '../domain/documentService';
+import { cacheService } from '../domain/cacheService';
 import arbolBloques from '../../public/localStorage/arbolBloques.json';
 import {
     updateBlock,
@@ -21,28 +21,33 @@ export const useDocument = (documentId) => {
     const [doc, setDoc] = useState(null);
     const [focusId, setFocusId] = useState(null);
     useEffect(() => {
-        const guardado = documentService.loadById(documentId);
-        if (guardado) {
-            setDoc(guardado);
-            return;
-        }
-        fetch('/localStorage/arbolBloques.json')
-            .then(res => res.json())
-            .then(data => {
+        const cargarDocumento = async () => {
+            // 1. Buscamos en IndexedDB primero (ahora con await)
+            const guardado = await cacheService.loadById(documentId);
+            if (guardado) {
+                setDoc(guardado);
+                return;
+            }
+            
+            // 2. Si no existe, cargamos el JSON local
+            try {
+                const res = await fetch('/localStorage/arbolBloques.json');
+                const data = await res.json();
                 const documentoOriginal = data.documents.find(d => d.id === documentId);
+                
                 if (documentoOriginal) {
                     setDoc(documentoOriginal);
                 } else {
                     setDoc({ ...DOC_INICIAL, id: documentId });
                 }
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error("Error cargando el JSON de prueba:", error);
                 setDoc({ ...DOC_INICIAL, id: documentId });
-            });
+            }
+        };
 
+        cargarDocumento();
     }, [documentId]);
-
     const updateContent = (id, newContent) => {
         setDoc(prev => {
             if (!prev) return prev;

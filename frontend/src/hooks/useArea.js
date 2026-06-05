@@ -1,33 +1,48 @@
-import { useEffect, useState } from "react";
-import traerJson from "../domain/archivoService.js";
-import { documentService } from "../domain/documentService.js";
+import { useState, useEffect } from "react";
+import { archivoService } from "../domain/archivoService.js";
 
-export default async function buscarArchivosporRuta(ruta) {
-  const archivos = buscarElementoPorRuta(await traerJson(), ruta);
-  const store = documentService.getStore();
-  const documentosGuardados = store.documents || [];
- return archivos.map(el => {
-    if (el.type === "document") {
-      const guardado = documentosGuardados.find(d => d.id === el.documentId);
-      return {
-        ...el,
-        name: guardado ? guardado.title : el.name // Si existe, usamos el título nuevo
-      };
-    }
-    return el;
-  });
-}
+/**
+ * Hook que carga las carpetas principales del usuario desde el BFF.
+ * Retorna el array correspondiente a la sección activa del sidebar.
+ *
+ * @param {string} idUsuario
+ * @param {string} seccion  - "mi-area" | "compartidos" | "recientes" | "destacados"
+ */
+export function useArea(idUsuario, seccion = "mi-area") {
+  const [elementos, setElementos] = useState([]);
+  const [cargando, setCargando] = useState(false);
+  const [error, setError] = useState(null);
 
-function buscarElementoPorRuta(root, path) {
-  if (!path) return root.children || [];
-  const segments = path.split("/").filter(Boolean);
-  let current = root;
-  for (let segment of segments) {
-    const children = current.children || [];
-    const found = children.find(el => el.name === segment);
-    if (!found) return [];
-    current = found;
-  }
+  useEffect(() => {
+    if (!idUsuario) return;
 
-  return current.children || [];
+    const cargar = async () => {
+      setCargando(true);
+      setError(null);
+
+      try {
+        const data = await archivoService.obtenerCarpetasPrincipales(idUsuario);
+
+        // Mapeamos la sección del sidebar a la clave que devuelve el BFF
+        const mapa = {
+          "mi-area":             data.MiArea             || [],
+          "compartidos-conmigo": data.CompartidosConmigo || [],
+          "recientes":           data.Recientes          || [],
+          "destacados":          data.Destacados         || [],
+        };
+
+        setElementos(mapa[seccion] ?? data.MiArea ?? []);
+      } catch (err) {
+        console.error("Error cargando área:", err);
+        setError(err.message);
+        setElementos([]);
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargar();
+  }, [idUsuario, seccion]);
+
+  return { elementos, cargando, error };
 }

@@ -1,68 +1,67 @@
 import { useState } from 'react';
+import { authApiService } from "../domain/authService.js";
 
 export const useUsers = () => {
-
-  // USERS
-  const [users, setUsers] = useState([
-    { id: 1, name: 'Tania', username: 'floppydiskette' }
-  ]);
-
-  // AUTH
-  const [whiteList, setWhiteList] = useState([
-    { email: 'admin@correo.com', password: '123' }
-  ]);
-
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loggedUser, setLoggedUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
   const [view, setView] = useState('login');
+  const [error, setError] = useState('');
 
   // LOGIN
   const [credentials, setCredentials] = useState({
-    email: '',
+    email: '', // Lo usaremos como 'username' para el BFF
     password: ''
   });
 
-  // REGISTER
+  // REGISTER (Adaptado a lo que pide RegisterRequest en auth.proto)
   const [user, setUser] = useState({
+    nombre: '',
+    apellido: '',
     email: '',
+    username: '',
     password: '',
     confirmPassword: ''
   });
 
-  const [error, setError] = useState('');
+  const handleLoginSuccess = (token, userData) => {
+  localStorage.setItem('token', token);
+  setLoggedUser(userData);
+  setIsAuthenticated(true);
+  setError('');
+};
 
-  // CRUD STATE
-  const [editing, setEditing] = useState(false);
-  const [currentUser, setCurrentUser] = useState({
-    id: null,
-    name: '',
-    username: ''
-  });
-
-  // =====================
-  // AUTH LOGIC
-  // =====================
-
-  const handleLogin = () => setIsAuthenticated(true);
-  const handleLogout = () => setIsAuthenticated(false);
-
-  const handleSubmitLogin = (e) => {
-    e.preventDefault();
-
-    const validUser = whiteList.find(
-      (u) =>
-        u.email === credentials.email &&
-        u.password === credentials.password
-    );
-
-    if (validUser) {
-      setError('');
-      handleLogin();
-    } else {
-      setError('Credenciales incorrectas');
+  const handleLogout = async () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        await authApiService.logout(token);
+      } catch (e) {
+        console.error("Error en el logout del servidor", e);
+      }
     }
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
   };
 
-  const handleSubmitRegister = (e) => {
+  const handleSubmitLogin = async (e) => {
+  e.preventDefault();
+  setError('');
+  
+  try {
+    const data = await authApiService.login(credentials.email, credentials.password);
+    
+    if (data.accessToken) {
+      // Pasamos el username y el idUsuario devueltos por el backend
+      handleLoginSuccess(data.accessToken, { 
+        username: data.username, 
+        idUsuario: data.idUsuario 
+      });
+    }
+  } catch (err) {
+    setError('Credenciales incorrectas o servidor no disponible');
+  }
+};
+  const handleSubmitRegister = async (e) => {
     e.preventDefault();
 
     if (user.password !== user.confirmPassword) {
@@ -70,13 +69,21 @@ export const useUsers = () => {
       return;
     }
 
-    setWhiteList([...whiteList, {
-      email: user.email,
-      password: user.password
-    }]);
-
-    setError('');
-    setView('login');
+    try {
+      await authApiService.register({
+        nombre: user.nombre,
+        apellido: user.apellido,
+        email: user.email,
+        username: user.username,
+        password: user.password
+      });
+      
+      setError('');
+      setView('login');
+      alert("Registro exitoso. Ahora puedes iniciar sesión.");
+    } catch (err) {
+      setError('Error al registrar. Verifica los datos.');
+    }
   };
 
   const handleChangeLogin = (e) => {
@@ -93,55 +100,18 @@ export const useUsers = () => {
     });
   };
 
-  // =====================
-  // CRUD
-  // =====================
-
-  const addUser = (user) => {
-    user.id = users.length + 1;
-    setUsers([...users, user]);
-  };
-
-  const deleteUser = (id) => {
-    setUsers(users.filter((u) => u.id !== id));
-  };
-
-  const updateUser = (id, updatedUser) => {
-    setUsers(users.map((u) => (u.id === id ? updatedUser : u)));
-    setEditing(false);
-  };
-
-  const editRow = (user) => {
-    setEditing(true);
-    setCurrentUser(user);
-  };
-
   return {
-    users,
-    editing,
-    currentUser,
-    whiteList,
     view,
     isAuthenticated,
-
     setView,
-    setEditing,
-    setCurrentUser,
-
     credentials,
     user,
     error,
-
-    handleLogin,
+    loggedUser,
     handleLogout,
     handleSubmitLogin,
     handleSubmitRegister,
     handleChangeLogin,
-    handleChangeRegister,
-
-    addUser,
-    deleteUser,
-    updateUser,
-    editRow
+    handleChangeRegister
   };
 };

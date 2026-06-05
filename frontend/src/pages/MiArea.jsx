@@ -1,42 +1,38 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import '../styles/pageInicio.css';
 import FileGrid from "../components/FileGrid.jsx";
 import ReadMe from "../components/ReadMe.jsx";
-import buscarArchivosporRuta from "/src/hooks/useArea.js";
+import { useArea } from "../hooks/useArea.js";
 
-export default function MiArea({route="mi-area"}) {
+function resolverSeccion(pathname) {
+  const segmentos = pathname.split("/").filter(Boolean);
+  const seccion = segmentos[2] ?? "mi-area";
+  const secciones = ["mi-area", "compartidos-conmigo", "recientes", "destacados"];
+  return secciones.includes(seccion) ? seccion : "mi-area";
+}
 
-    const location = useLocation();
-    const [elementos, setElementos] = useState([]);
-    useEffect(() => {
-        const cargar = async () => {
-            
-        const fullPath = location.pathname;
+export default function MiArea() {
+  const location = useLocation();
+  const { UserId } = useParams();
 
-        const pathAfter = fullPath.split("mi-area/")[1] || "";
+  const seccion = resolverSeccion(location.pathname);
+  const { elementos, cargando, error } = useArea(UserId, seccion);
 
-        const res = await buscarArchivosporRuta(pathAfter);
-        setElementos(res);
-    };
+  if (cargando) return <div className="General">Cargando...</div>;
+  if (error)    return <div className="General">Error: {error}</div>;
 
-    cargar();
-    }, [location.pathname]);
-    const segments = location.pathname.split("/").filter(Boolean);
-    const currentFolder = segments[segments.length - 1] || "mi-area";
+  const carpetaRaiz = elementos[0];
+  const datos = {
+    name: carpetaRaiz?.nombre ?? seccion,
+    children: carpetaRaiz?.componentes ?? [],
+  };
 
-    const datos = {
-        name: currentFolder,
-        children: elementos
-    }
-
-    return (
-        <div className="General">
-            <div className="title-row">
-                <ReadMe />
-            </div>
-
-            <FileGrid data={datos}/>
-        </div>
-    );
+  return (
+    <div className="General">
+      <div className="title-row">
+        <ReadMe />
+      </div>
+      <FileGrid data={datos} />
+    </div>
+  );
 }

@@ -1,26 +1,39 @@
-import {useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from "react-router-dom";
+import localforage from 'localforage';
 import './ReadMe.css';
 
-
 export default function ReadMe() {
-
   const { pathname } = useLocation();
   const [text, setText] = useState("");
-  const [content, setContent] = useState(() => 
-    localStorage.getItem('readme-content') || '');
+  const [content, setContent] = useState("");
+
+  // Cargar contenido general
+  useEffect(() => {
+    localforage.getItem('readme-content').then(saved => {
+      setContent(saved || '');
+    });
+  }, []);
+
+  // Cargar texto específico de la ruta
+  useEffect(() => {
+    localforage.getItem(`readme-${pathname}`).then(saved => {
+      setText(saved || "");
+    });
+  }, [pathname]);
 
   const handleChange = (e) => {
     const newText = e.target.value;
     setContent(newText);
-    localStorage.setItem('readme-content', newText);};
-   
-  useEffect(() => {
-    const saved = localStorage.getItem(`readme-${pathname}`);
-    setText(saved || "");}, [pathname]);
+    localforage.setItem('readme-content', newText);
+  };
 
+  // Guardar texto específico de la ruta
   useEffect(() => {
-    localStorage.setItem(`readme-${pathname}`, text);
+    // Evitamos guardar cadenas vacías en la primera renderización si aún no cargó
+    if (text !== "") {
+      localforage.setItem(`readme-${pathname}`, text);
+    }
   }, [text, pathname]);
 
   return (
@@ -31,8 +44,9 @@ export default function ReadMe() {
         className="readme-input"
         id="readme-input"
         value={text}
-        onChange={(e) => setText(e.target.value)}/>
-        </p>
+        onChange={(e) => setText(e.target.value)}
+      />
+      </p>
     </div>
   );
 }

@@ -1,9 +1,10 @@
 import { Editor } from '../components/Editor.jsx';
 import Toolbar from '../components/Toolbar.jsx';
 import { useDocument } from '../hooks/useDocument.js';
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import { useAutoSave } from '../hooks/useAutoSave.js';
-import { documentService } from '../domain/documentService';
+import { cacheService } from '../domain/cacheService';
+
 
 const DocumentPage = ({documentId}) => {
   
@@ -22,11 +23,13 @@ const DocumentPage = ({documentId}) => {
     focusId
   } = useDocument(documentId);
   
-  const guardarDatos = async (documentoActualizado) => {
-    documentService.save(documentoActualizado);
-  };
+const guardarDatos = useCallback(async (documentoActualizado) => {
+    console.log("Iniciando guardado...");
+    await cacheService.save(documentoActualizado);
+    console.log("¡Documento guardado con éxito!");
+  }, []);
 
-  const estadoGuardado = useAutoSave(doc, guardarDatos, 5000);
+  const estadoGuardado = useAutoSave(doc, guardarDatos, 2000);
 
   const handleSelectBlock = (block) => {
     lastSelectedRef.current = block;

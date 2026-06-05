@@ -10,18 +10,19 @@ export default function Login() {
   const {
     credentials,
     error,
+    loggedUser,
     handleChangeLogin,
     handleSubmitLogin,
     isAuthenticated
   } = useUsers();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      const nameUser = "maira";
-      const UserId = 123;
+    if (isAuthenticated && loggedUser) {
+      const nameUser = loggedUser.username;
+      const UserId = loggedUser.idUsuario;
       navigate(`/${nameUser}/${UserId}/mi-area`);
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, loggedUser, navigate]);
 
   return (
     <div className="login-wrapper">
