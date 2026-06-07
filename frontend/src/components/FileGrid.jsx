@@ -19,7 +19,6 @@ export default function FileGrid({ data }) {
     const nombre = file.nombre ?? file.name;
 
     if (tipo === "folder" || tipo === "carpeta") {
-      // Navegamos por id si está disponible, si no por nombre
       const segmento = file.id ?? nombre;
       const newPath = `${location.pathname}/${segmento}`.replace("//", "/");
       navigate(newPath);

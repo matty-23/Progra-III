@@ -4,18 +4,16 @@ import FileGrid from "../components/FileGrid.jsx";
 import ReadMe from "../components/ReadMe.jsx";
 import { useArea } from "../hooks/useArea.js";
 
-function resolverSeccion(pathname) {
-  const segmentos = pathname.split("/").filter(Boolean);
-  const seccion = segmentos[2] ?? "mi-area";
-  const secciones = ["mi-area", "compartidos-conmigo", "recientes", "destacados"];
-  return secciones.includes(seccion) ? seccion : "mi-area";
-}
 
 export default function MiArea() {
   const location = useLocation();
-  const { UserId } = useParams();
+  const { UserId, seccion } = useParams();
+  console.log(seccion);
+  const SECCIONES_VALIDAS = ["mi-area","compartidos-conmigo","recientes","destacados"];
+  if (!SECCIONES_VALIDAS.includes(seccion)) {
+  return <NotFound />;
+  }
 
-  const seccion = resolverSeccion(location.pathname);
   const { elementos, cargando, error } = useArea(UserId, seccion);
 
   if (cargando) return <div className="General">Cargando...</div>;
@@ -26,6 +24,23 @@ export default function MiArea() {
     name: carpetaRaiz?.nombre ?? seccion,
     children: carpetaRaiz?.componentes ?? [],
   };
+
+   if (!carpetaRaiz || carpetaRaiz.componentes?.length === 0) {
+    return (
+      <div className="General empty-state">
+        <div className="title-row">
+          <ReadMe />
+        </div>
+
+        <div className="empty-content">
+          <h2>📂 Todavía no hay contenido aquí</h2>
+          <p>
+            Cuando agregues archivos o carpetas aparecerán en esta sección.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="General">

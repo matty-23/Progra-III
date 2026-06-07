@@ -1,13 +1,6 @@
 import { useState, useEffect } from "react";
-import { archivoService } from "../domain/archivoService.js";
+import { archivoService } from "../services/archivoService.js";
 
-/**
- * Hook que carga las carpetas principales del usuario desde el BFF.
- * Retorna el array correspondiente a la sección activa del sidebar.
- *
- * @param {string} idUsuario
- * @param {string} seccion  - "mi-area" | "compartidos" | "recientes" | "destacados"
- */
 export function useArea(idUsuario, seccion = "mi-area") {
   const [elementos, setElementos] = useState([]);
   const [cargando, setCargando] = useState(false);
@@ -23,7 +16,7 @@ export function useArea(idUsuario, seccion = "mi-area") {
       try {
         const data = await archivoService.obtenerCarpetasPrincipales(idUsuario);
 
-        // Mapeamos la sección del sidebar a la clave que devuelve el BFF
+
         const mapa = {
           "mi-area":             data.MiArea             || [],
           "compartidos-conmigo": data.CompartidosConmigo || [],
