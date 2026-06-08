@@ -82,32 +82,35 @@ export default function MiArea() {
     </div>
   );
 
-  if (componentes.length === 0) {
-    return (
-      <div className="General empty-state">
-        {seccion === "mi-area" && (
-          <div className="title-row">
-            <ReadMe carpetaId={carpetaActual?.id} nombreCarpeta={carpetaActual?.nombre} />
-          </div>
-        )}
-        <div className="empty-content">
-          <h2>📂 Todavía no hay contenido aquí</h2>
-          <p>Cuando agregues archivos o carpetas aparecerán en esta sección.</p>
-        </div>
-        <BotonFlotante />
-      </div>
-    );
-  }
-
   return (
-    <div className="General">
-      {seccion === "mi-area" && (
-        <div className="title-row">
-          <ReadMe carpetaId={carpetaActual?.id} nombreCarpeta={carpetaActual?.nombre} />
-        </div>
-      )}
-      <FileGrid data={datos} onEdit={handleEditar} onDelete={handleEliminar} />
-      <BotonFlotante />
-    </div>
-  );
+  <div className="General">
+
+    {seccion === "mi-area" && (
+      <div className="title-row">
+        <ReadMe
+          carpetaId={carpetaActual?.id}
+          nombreCarpeta={carpetaActual?.nombre}
+        />
+      </div>
+    )}
+
+    {componentes.length === 0 ? (
+      <div className="empty-content">
+        <h2>📂 Todavía no hay contenido aquí</h2>
+        <p>
+          Cuando agregues archivos o carpetas aparecerán en esta sección.
+        </p>
+      </div>
+    ) : (
+      <FileGrid
+        data={datos}
+        onEdit={handleEditar}
+        onDelete={handleEliminar}
+      />
+    )}
+
+    <BotonFlotante />
+
+  </div>
+);
 }

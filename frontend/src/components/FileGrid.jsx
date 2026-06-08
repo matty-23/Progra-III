@@ -1,21 +1,16 @@
-import { useEffect, useState } from "react";
 import FileCard from "./FileCard";
 import "./FileGrid.css";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function FileGrid({ data, onEdit, onDelete }) { 
-  const [files, setFiles] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    if (data?.children) {
-      setFiles(data.children);
-    }
-  }, [data]);
+  // Leemos directamente de las props sin useState ni useEffect
+  const files = data?.children || [];
 
   const handleClick = (file) => {
-    const tipo   = file.tipo  ?? file.type;
+    const tipo   = file.tipo  ?? file.type ?? "folder";
     const nombre = file.nombre ?? file.name;
 
     if (tipo === "folder" || tipo === "carpeta") {
@@ -39,7 +34,9 @@ export default function FileGrid({ data, onEdit, onDelete }) {
             file={file} 
             onClick={handleClick} 
             onEdit={onEdit}       
-            onDelete={onDelete}/>))}
+            onDelete={onDelete}
+          />
+        ))}
       </div>
     </div>
   )

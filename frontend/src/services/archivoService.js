@@ -9,7 +9,9 @@ export const archivoService = {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
+        'Cache-Control': 'no-cache' 
       },
+      cache: 'no-store'
     });
 
     if (!response.ok) {
@@ -45,7 +47,9 @@ export const archivoService = {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
+        'Cache-Control': 'no-cache' 
       },
+      cache: 'no-store'
     });
 
     if (!response.ok) {
