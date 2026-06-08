@@ -1,51 +1,54 @@
-import { useEffect, useState } from 'react';
-import { useLocation } from "react-router-dom";
+import { useEffect, useState, useCallback } from 'react';
+import { useLocation, useParams } from "react-router-dom";
 import localforage from 'localforage';
+import { archivoService } from '../services/archivoService.js';
+import { useAutoSave } from '../hooks/useAutoSave.js'; 
 import './ReadMe.css';
 
-export default function ReadMe() {
+export default function ReadMe({ carpetaId, nombreCarpeta }) {
   const { pathname } = useLocation();
+  const { UserId } = useParams();
   const [text, setText] = useState("");
-  const [content, setContent] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // Cargar contenido general
   useEffect(() => {
-    localforage.getItem('readme-content').then(saved => {
-      setContent(saved || '');
-    });
-  }, []);
-
-  // Cargar texto específico de la ruta
-  useEffect(() => {
+    setIsLoaded(false);
     localforage.getItem(`readme-${pathname}`).then(saved => {
       setText(saved || "");
+      setIsLoaded(true);
     });
   }, [pathname]);
 
-  const handleChange = (e) => {
-    const newText = e.target.value;
-    setContent(newText);
-    localforage.setItem('readme-content', newText);
-  };
+  const guardarEnServidor = useCallback(async (textoParaGuardar) => {
+    if (!isLoaded) return;
+    await localforage.setItem(`readme-${pathname}`, textoParaGuardar);
 
-  // Guardar texto específico de la ruta
-  useEffect(() => {
-    // Evitamos guardar cadenas vacías en la primera renderización si aún no cargó
-    if (text !== "") {
-      localforage.setItem(`readme-${pathname}`, text);
+    if (carpetaId && nombreCarpeta) {
+      try {
+        await archivoService.actualizarCarpeta(carpetaId, nombreCarpeta, UserId, textoParaGuardar);
+      } catch (error) {
+        console.error("Error guardando readme en BFF:", error);
+        throw error; 
+      }
     }
-  }, [text, pathname]);
+  }, [isLoaded, pathname, carpetaId, nombreCarpeta, UserId]);
+
+  const estadoGuardado = useAutoSave(text, guardarEnServidor, 2000);
+
+  const handleChange = (e) => {
+    setText(e.target.value);
+  };
 
   return (
     <div className="readme-container">
-      <h2 className='title-readme'>README</h2>
+        <h2 className='title-readme'>README</h2>
       <p>
-      <textarea
-        className="readme-input"
-        id="readme-input"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
+        <textarea
+          className="readme-input"
+          id="readme-input"
+          value={text}
+          onChange={handleChange}
+        />
       </p>
     </div>
   );

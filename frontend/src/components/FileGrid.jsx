@@ -3,7 +3,7 @@ import FileCard from "./FileCard";
 import "./FileGrid.css";
 import { useNavigate, useLocation } from "react-router-dom";
 
-export default function FileGrid({ data }) {
+export default function FileGrid({ data, onEdit, onDelete }) { 
   const [files, setFiles] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,13 +30,17 @@ export default function FileGrid({ data }) {
     }
   };
 
-  return (
+ return (
     <div className="grid-container">
       <div className="grid">
         {files.map((file) => (
-          <FileCard key={file.id ?? file.nombre ?? file.name} file={file} onClick={handleClick} />
-        ))}
+          <FileCard 
+            key={file.id ?? file.nombre ?? file.name} 
+            file={file} 
+            onClick={handleClick} 
+            onEdit={onEdit}       
+            onDelete={onDelete}/>))}
       </div>
     </div>
-  );
+  )
 }

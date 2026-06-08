@@ -11,10 +11,9 @@
 }
 
 .card:hover {
-  border-color: #1a73e8; /* Borde azul al interactuar */
+  border-color: #1a73e8;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); 
   cursor: pointer;
-  /* Quitamos el transform de salto para que sea más profesional y estático */
 }
 
 .folder-preview, .preview {
@@ -44,7 +43,34 @@
   text-overflow: ellipsis;
 }
 
-/* Ocultamos la meta para igualar el minimalismo de la foto */
 .meta {
   display: none; 
+}
+
+.file-card-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.file-card-title {
+  flex: 1;
+}
+
+.file-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-card-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 2px;
+  transition: transform 0.1s ease;
+}
+
+.btn-card-action:hover {
+  transform: scale(1.2);
 }

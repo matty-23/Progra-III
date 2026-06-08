@@ -9,10 +9,13 @@
 }
 
 .search-bar {
-  background-color: #2b2c31; /* Fondo más oscuro para la barra */
+  background-color: #2b2c31;
   border-radius: 8px;
   padding: 6px 16px;
-  width: 500px;
+  
+  width: 100%;
+  max-width: 500px; 
+  
   display: flex;
   align-items: center;
   gap: 10px;
@@ -36,9 +39,10 @@
   display: flex;
   align-items: center;
   gap: 20px;
+  flex-shrink: 0; 
 }
 
-/* Ocultamos el perfil del Header ya que ahora irá en la tarjeta del Sidebar */
 .user-profile {
   display: none; 
 }
+
