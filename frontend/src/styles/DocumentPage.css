@@ -2,3 +2,49 @@
     height: 100vh;
     overflow: auto;
 }
+
+/* --- Nuevos estilos para el Botón de Guardado --- */
+.header-document {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.save-status {
+    font-size: 0.85rem;
+    color: #888680;
+    font-family: 'DM Sans', sans-serif;
+    font-style: italic;
+}
+
+.btn-save-document {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.btn-save-document:hover:not(:disabled) {
+    background-color: #1557b0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.btn-save-document:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-save-document:disabled {
+    background-color: #8ab4f8;
+    cursor: wait;
+}

@@ -9,17 +9,7 @@ import Route from "../components/Route.jsx";
 import ReadMe from "../components/ReadMe.jsx";
 
 export default function PageInicio() {
-    const [filesData, setFilesData] = useState(null);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        fetch("/localStorage/arbolArchivos.json")
-            .then(res => res.json())
-            .then(data => {
-                setFilesData(data);
-            });
-    }, []);
-
+const navigate = useNavigate();
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
