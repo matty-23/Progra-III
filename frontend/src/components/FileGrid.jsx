@@ -6,22 +6,27 @@ export default function FileGrid({ data, onEdit, onDelete }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Leemos directamente de las props sin useState ni useEffect
   const files = data?.children || [];
 
   const handleClick = (file) => {
-    const tipo   = file.tipo  ?? file.type ?? "folder";
+    // Normalizamos el tipo a minúsculas
+    const rawType = file.tipo ?? file.type ?? "folder";
+    const tipo = String(rawType).toLowerCase();
+    
     const nombre = file.nombre ?? file.name;
 
     if (tipo === "folder" || tipo === "carpeta") {
       const segmento = file.id ?? nombre;
       const newPath = `${location.pathname}/${segmento}`.replace("//", "/");
       navigate(newPath);
-    }
-
-    if (tipo === "document" || tipo === "documento") {
+    } 
+    else if (tipo === "document" || tipo === "documento") {
       const docId = file.id ?? file.documentId;
       window.open(`/document/${docId}`, "_blank");
+    } 
+    else {
+      // Si el backend manda algo distinto, lo mostramos en consola para poder depurar
+      console.warn("No se reconoció el tipo de archivo al hacer clic:", tipo, file);
     }
   };
 

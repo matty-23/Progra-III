@@ -20,43 +20,33 @@ const DOC_INICIAL = {
 export const useDocument = (documentId) => {
     const [doc, setDoc] = useState(null);
     const [focusId, setFocusId] = useState(null);
+
+
     useEffect(() => {
-        const cargarDocumento = async () => {
-            // 1. Buscamos en IndexedDB primero (ahora con await)
+        const cargar = async () => {
             const guardado = await cacheService.loadById(documentId);
-            if (guardado) {
-                setDoc(guardado);
-                return;
-            }
-            
-            // 2. Si no existe, cargamos el JSON local
+            if (guardado) { setDoc(guardado); return; }
+
             try {
                 const res = await fetch('/localStorage/arbolBloques.json');
                 const data = await res.json();
-                const documentoOriginal = data.documents.find(d => d.id === documentId);
-                
-                if (documentoOriginal) {
-                    setDoc(documentoOriginal);
-                } else {
-                    setDoc({ ...DOC_INICIAL, id: documentId });
-                }
-            } catch (error) {
-                console.error("Error cargando el JSON de prueba:", error);
+                const encontrado = data.documents.find(d => d.id === documentId);
+                setDoc(encontrado ?? { ...DOC_INICIAL, id: documentId });
+            } catch {
                 setDoc({ ...DOC_INICIAL, id: documentId });
             }
         };
-
-        cargarDocumento();
+        cargar();
     }, [documentId]);
-    const updateContent = (id, newContent) => {
-        setDoc(prev => {
-            if (!prev) return prev;
-            return {
-                ...prev,
-                blocks: updateBlock(prev.blocks, id, { content: newContent })
-            };
-        });
-    };
+
+    // GUARDADO — esto es lo nuevo
+    const guardarDoc = useCallback(async (docActual) => {
+        await cacheService.save(docActual);
+        await syncService.markDirty(docActual.id);
+    }, []);
+
+    const estadoGuardado = useAutoSave(doc, guardarDoc, 3000);
+
 
     const updateMeta = (id, patch) => {
         if (id === 'title') {
@@ -112,7 +102,13 @@ export const useDocument = (documentId) => {
 
     if (!doc) return { doc: null };
 
+
     return {
-        doc, updateContent, updateMeta, addChild, addBlockBelow, changeType, removeBlock, indentBlock, focusId
+        doc, estadoGuardado,          
+        updateContent, updateMeta,
+        addChild, addBlockBelow,
+        changeType, removeBlock,
+        indentBlock, focusId,
     };
+
 };

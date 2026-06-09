@@ -12,20 +12,21 @@ export function useArea(idUsuario, seccion = "mi-area", carpetaId = null) {
     setCargando(true);
     try {
       if (carpetaId) {
-       const carpeta = await archivoService.obtenerCarpeta(carpetaId);
+        const carpeta = await archivoService.obtenerCarpeta(carpetaId);
+        const contenido = await archivoService.obtenerContenidoCarpeta(carpetaId); // ← agregar
         setCarpetaActual(carpeta);
-        setComponentes(carpeta.componentes || []);
+        setComponentes(contenido || []); // ← cambiar esto
       } else {
-          const data = await archivoService.obtenerCarpetasPrincipales(idUsuario);
+        const data = await archivoService.obtenerCarpetasPrincipales(idUsuario);
         const mapa = {
-          "mi-area":             data.MiArea             || [],
+          "mi-area": data.MiArea || [],
           "compartidos-conmigo": data.CompartidosConmigo || [],
-          "recientes":           data.Recientes          || [],
-          "destacados":          data.Destacados         || [],
+          "recientes": data.Recientes || [],
+          "destacados": data.Destacados || [],
         };
-        
+
         const raizSeccion = mapa[seccion]?.[0] || null;
-        
+
         setCarpetaActual(raizSeccion || { nombre: seccion, id: null, ReadMe: "" });
         setComponentes(raizSeccion?.componentes || []);
       }
@@ -41,18 +42,30 @@ export function useArea(idUsuario, seccion = "mi-area", carpetaId = null) {
   }, [cargar]);
 
   const crearCarpeta = async (idPadre, nombre) => {
-    await archivoService.crearCarpeta(idPadre, nombre, idUsuario);
-    await cargar(); 
+    try {
+      await archivoService.crearCarpeta(idPadre, nombre, idUsuario);
+      await cargar();
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   const actualizarCarpeta = async (idCarpeta, nombre, readme = "") => {
-    await archivoService.actualizarCarpeta(idCarpeta, nombre, idUsuario, readme);
-    await cargar();
+    try {
+      await archivoService.actualizarCarpeta(idCarpeta, nombre, idUsuario, readme);
+      await cargar();
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   const eliminarCarpeta = async (idCarpeta) => {
-    await archivoService.eliminarCarpeta(idCarpeta, idUsuario);
-    await cargar();
+    try {
+      await archivoService.eliminarCarpeta(idCarpeta, idUsuario);
+      await cargar();
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return { carpetaActual, componentes, cargando, error, crearCarpeta, actualizarCarpeta, eliminarCarpeta };

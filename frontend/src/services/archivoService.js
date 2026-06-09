@@ -103,7 +103,6 @@ export const archivoService = {
     const response = await fetch(`${API_URL}/carpetas/${idCarpeta}/usuario/${idUsuario}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
     });

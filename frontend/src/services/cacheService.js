@@ -1,63 +1,51 @@
+// services/cacheService.js
 import localforage from 'localforage';
 
-const KEY = 'documents';
+const DIRTY_KEY = 'dirtyDocs';
+
+const docKey  = (id) => `doc:${id}`;
 
 export const cacheService = {
-  async getStore() {
-    try {
-      const store = await localforage.getItem(KEY);
-      if (!store) {
-        const initialStore = { documents: [] };
-        await localforage.setItem(KEY, initialStore);
-        return initialStore;
-      }
-      return store;
-    } catch (e) {
-      console.error("Error leyendo localforage, reseteando...", e);
-      const initialStore = { documents: [] };
-      await localforage.setItem(KEY, initialStore);
-      return initialStore;
-    }
-  },
-  
-  async loadById(id) {
-    const store = await this.getStore();
-    const doc = store?.documents?.find(d => d.id === id);
-    
-    if (!doc) {
-        return null;
-    }
-    
-    // Normalización profunda
-    const normalize = (blocks) =>
-      blocks.map(b => ({
-        ...b,
-        id: b.id,
-        type: b.type ?? 'paragraph',
-        content: b.content ?? '',
-        metadata: b.metadata ?? {},
-        children: b.children ? normalize(b.children) : [],
-      }));
 
-    return { ...doc, blocks: normalize(doc.blocks) };
+  async loadById(id) {
+    const raw = await localforage.getItem(docKey(id));
+    if (!raw) return null;
+    return normalize(raw);
   },
 
   async save(doc) {
-    try {
-      const store = await this.getStore();
-      const idx = store.documents.findIndex(d => d.id === doc.id);
-      
-      const docToSave = JSON.parse(JSON.stringify(doc));
+    const docToSave = JSON.parse(JSON.stringify(doc)); // deep clone
+    await localforage.setItem(docKey(doc.id), docToSave);
+    // NO llama a syncService aquí — eso lo hace quien llama a save()
+  },
 
-      if (idx >= 0) {
-        store.documents[idx] = docToSave;
-      } else {
-        store.documents.push(docToSave);
-      }
-      
-      await localforage.setItem(KEY, store);
-    } catch (e) {
-      console.error("Error al guardar en IndexedDB:", e);
+  // dirtyDocs también persiste en IndexedDB
+  async getDirtyIds() {
+    return (await localforage.getItem(DIRTY_KEY)) ?? [];
+  },
+
+  async addDirtyId(id) {
+    const current = await this.getDirtyIds();
+    if (!current.includes(id)) {
+      await localforage.setItem(DIRTY_KEY, [...current, id]);
     }
   },
+
+  async removeDirtyId(id) {
+    const current = await this.getDirtyIds();
+    await localforage.setItem(DIRTY_KEY, current.filter(d => d !== id));
+  },
 };
+
+// normalización interna — no la expone
+function normalize(doc) {
+  const normalizeBlocks = (blocks = []) =>
+    blocks.map(b => ({
+      ...b,
+      type:     b.type     ?? 'paragraph',
+      content:  b.content  ?? '',
+      metadata: b.metadata ?? {},
+      children: normalizeBlocks(b.children),
+    }));
+  return { ...doc, blocks: normalizeBlocks(doc.blocks) };
+}

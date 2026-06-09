@@ -1,6 +1,6 @@
 import './App.css'
 import PageInicio from "./pages/PageInicio.jsx";
-import DocumentPageWrapper from "./pages/DocumentPageWrapper.jsx";
+import {DocumentPageWrapper, MiAreaWrapper} from "./pages/DocumentPageWrapper.jsx";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ReadMe from "./components/ReadMe.jsx";
 import MiArea from './pages/MiArea.jsx';
@@ -16,9 +16,9 @@ export default function App() {
         <Route path="/document/:id" element={<DocumentPageWrapper />} />
         <Route path="/readme" element={<ReadMe />} />
 
-        <Route path="/:nameUser/:UserId" element={<PageInicio />}>
-          <Route path=":seccion/*" element={<MiArea />} />
-        </Route>
+<Route path="/:nameUser/:UserId" element={<PageInicio />}>
+  <Route path=":seccion/*" element={<MiAreaWrapper />} />
+</Route>
       </Routes>
     </BrowserRouter>
   )

@@ -13,7 +13,10 @@ const DocIcon = () => (
 );
 
 export default function FileCard({ file, onClick, onEdit, onDelete }) {
-  const tipo = file.tipo ?? file.type ?? "folder";
+  // Normalizamos el tipo a minúsculas para evitar errores
+  const rawType = file.tipo ?? file.type ?? "folder";
+  const tipo = String(rawType).toLowerCase();
+  
   const nombre = file.nombre ?? file.name ?? "Sin nombre";
   const isDoc = tipo === "document" || tipo === "documento";
 
@@ -27,8 +30,8 @@ export default function FileCard({ file, onClick, onEdit, onDelete }) {
         <p className="title file-card-title">{nombre}</p>
         
         <div className="file-card-actions">
-          <button className="btn-card-action" onClick={(e) => { e.stopPropagation(); onEdit(file); }} title="Editar"> </button>
-          <button className="btn-card-action" onClick={(e) => { e.stopPropagation(); onDelete(file); }}title="Eliminar"> </button>
+          <button className="btn-card-action" onClick={(e) => { e.stopPropagation(); onEdit(file); }} title="Editar">✏️</button>
+          <button className="btn-card-action" onClick={(e) => { e.stopPropagation(); onDelete(file); }} title="Eliminar">🗑️</button>
         </div>
       </div>
     </div>

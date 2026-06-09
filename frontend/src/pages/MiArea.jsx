@@ -28,14 +28,18 @@ export default function MiArea() {
     children: componentes,
   };
 
-  const handleCrearCarpeta = () => {
-    setMenuOpen(false);
-    if (!carpetaActual?.id) return alert("Error: No se encontró la carpeta padre.");
-    const nombre = prompt("Ingresa el nombre de la nueva carpeta:");
-    if (nombre && nombre.trim() !== "") {
-      crearCarpeta(carpetaActual.id, nombre);
+const handleCrearCarpeta = async () => {
+  setMenuOpen(false);
+  if (!carpetaActual?.id) return alert("Error: No se encontró la carpeta padre.");
+  const nombre = prompt("Ingresa el nombre de la nueva carpeta:");
+  if (nombre && nombre.trim() !== "") {
+    try {
+      await crearCarpeta(carpetaActual.id, nombre); // ← await
+    } catch (err) {
+      alert("Error al crear la carpeta: " + err.message);
     }
-  };
+  }
+};
 
   const handleCrearDocumento = () => {
     setMenuOpen(false);
@@ -46,17 +50,41 @@ export default function MiArea() {
     }
   };
 
-  const handleEditar = (file) => {
-    const nuevoNombre = prompt("Ingresa el nuevo nombre:", file.nombre);
-    if (nuevoNombre && nuevoNombre.trim() !== "" && nuevoNombre !== file.nombre) {
-      actualizarCarpeta(file.id, nuevoNombre, file.ReadMe || "");
+const handleEliminar = async (file) => {
+    // Normalizamos los datos por si es carpeta o documento
+    const nombre = file.nombre ?? file.name ?? "este elemento";
+    const idElemento = file.id ?? file.documentId;
+
+    if (!idElemento) {
+      return alert("Error: No se encontró el ID para eliminar.");
+    }
+
+    const confirmar = window.confirm(`¿Estás seguro de que deseas eliminar '${nombre}'?`);
+    if (confirmar) {
+      try {
+        await eliminarCarpeta(idElemento);
+      } catch (err) {
+        alert("Error al eliminar: " + err.message);
+      }
     }
   };
 
-  const handleEliminar = (file) => {
-    const confirmar = window.confirm(`¿Estás seguro de que deseas eliminar '${file.nombre}'?`);
-    if (confirmar) {
-      eliminarCarpeta(file.id);
+  const handleEditar = async (file) => {
+    // Normalizamos también para la edición
+    const nombreActual = file.nombre ?? file.name ?? "";
+    const idElemento = file.id ?? file.documentId;
+
+    if (!idElemento) {
+      return alert("Error: No se encontró el ID para editar.");
+    }
+
+    const nuevoNombre = prompt("Ingresa el nuevo nombre:", nombreActual);
+    if (nuevoNombre && nuevoNombre.trim() !== "" && nuevoNombre !== nombreActual) {
+      try {
+        await actualizarCarpeta(idElemento, nuevoNombre, file.ReadMe || "");
+      } catch (err) {
+        alert("Error al editar: " + err.message);
+      }
     }
   };
 
