@@ -45,7 +45,6 @@ export const Block = ({
     const el = inputRef.current;
     el?.focus();
 
-    // Solo mover el cursor al final si es la primera vez que se hace foco (foco programático)
     if (el && !isProgrammaticFocus.current) {
       isProgrammaticFocus.current = true;
       const range = document.createRange();

@@ -40,7 +40,8 @@ export const documentoApiService = {
       });
   },
   
-  eliminar: (id, idUsuario) => request(`/documentos/${id}/usuario/${idUsuario}`, {
-      method: 'DELETE'
+  eliminar: (id) => request(`/documentos/${id}`, {
+      method: 'DELETE',
+      body: JSON.stringify({}) 
   })
 };

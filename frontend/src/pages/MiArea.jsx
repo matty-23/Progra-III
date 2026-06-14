@@ -82,7 +82,7 @@ const handleConfirmarEliminar = async (file) => {
       const tipo = String(file.tipo ?? file.type ?? "folder").toLowerCase();
       
       if (tipo === "documento" || tipo === "document") {
-        await documentoApiService.eliminar(idElemento, UserId);
+        await documentoApiService.eliminar(idElemento);
         await cargar(); 
       } else {
         await eliminarCarpeta(idElemento);

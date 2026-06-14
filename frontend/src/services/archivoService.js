@@ -100,7 +100,7 @@ export const archivoService = {
   async eliminarCarpeta(idCarpeta, idUsuario) {
     const token = localStorage.getItem('token');
 
-    const response = await fetch(`${API_URL}/carpetas/${idCarpeta}/usuario/${idUsuario}`, {
+    const response = await fetch(`${API_URL}/carpetas/${idCarpeta}/usuario`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
