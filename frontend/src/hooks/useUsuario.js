@@ -3,16 +3,15 @@ import { authApiService } from "../services/authService.js";
 
 export const useUsers = () => {
   const [loggedUser, setLoggedUser] = useState(() => {
-    const guardado = localStorage.getItem('loggedUser');
-    return guardado ? JSON.parse(guardado) : null;
+    const saved = localStorage.getItem('loggedUser');
+    return saved ? JSON.parse(saved) : null;
   });
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
-  const [view, setView] = useState('login');
   const [error, setError] = useState('');
-
+  const [view, setView] = useState('login');
 
   const [credentials, setCredentials] = useState({
-    username: '', 
+    username: '',
     password: ''
   });
 
@@ -25,46 +24,42 @@ export const useUsers = () => {
     confirmPassword: ''
   });
 
- const handleLoginSuccess = (token, userData) => {
-  localStorage.setItem('token', token);
-  localStorage.setItem('loggedUser', JSON.stringify(userData)); 
-  setLoggedUser(userData);
-  setIsAuthenticated(true);
-  setError('');
-};
+  const handleLoginSuccess = (accessToken, userData) => {
+    localStorage.setItem('token', accessToken); // Vida corta (ej: 15 min)
+    localStorage.setItem('loggedUser', JSON.stringify(userData));
+    setLoggedUser(userData);
+    setIsAuthenticated(true);
+    setError('');
+  };
 
- const handleLogout = async () => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    try {
-      await authApiService.logout(token);
-    } catch (e) {
-      console.error("Error en el logout del servidor", e);
-    }
-  }
-  localStorage.removeItem('token');
-  localStorage.removeItem('loggedUser');
-  setIsAuthenticated(false);
-  setLoggedUser(null); 
-};
+  const handleLogout = async () => {
+    // Llamamos a la API para invalidar en backend
+    await authApiService.logout();
 
+    // Limpiamos localmente
+    localStorage.removeItem('token');
+    localStorage.removeItem('loggedUser');
+    // localStorage.removeItem('refreshToken'); <-- ¡ESTO YA NO EXISTE!
+
+    setIsAuthenticated(false);
+    setLoggedUser(null);
+  };
   const handleSubmitLogin = async (e) => {
-  e.preventDefault();
-  setError('');
-  
-  try {
-    const data = await authApiService.login(credentials.username, credentials.password);
-    
-    if (data.accessToken) {
-      handleLoginSuccess(data.accessToken, { 
-        username: data.username, 
-        idUsuario: data.idUsuario 
-      });
+    e.preventDefault();
+    setError('');
+    try {
+      const data = await authApiService.login(credentials.username, credentials.password);
+      if (data.accessToken) {
+        handleLoginSuccess(
+          data.accessToken,
+          { username: data.username, idUsuario: data.idUsuario }
+        );
+      }
+    } catch {
+      setError('Credenciales incorrectas o servidor no disponible');
     }
-  } catch (err) {
-    setError('Credenciales incorrectas o servidor no disponible');
-  }
-};
+  };
+
   const handleSubmitRegister = async (e) => {
     e.preventDefault();
 
@@ -81,7 +76,7 @@ export const useUsers = () => {
         username: user.username,
         password: user.password
       });
-      
+
       setError('');
       setView('login');
       return true;
