@@ -38,20 +38,30 @@ export const Block = ({
     onRemoveBlock(block.id);
   };
 
-  useEffect(() => {
-    const el = inputRef.current;
-    if (el?.tagName === 'TEXTAREA') {
-      el.style.height = 'auto';
-      el.style.height = el.scrollHeight + 'px';
-    }
-  }, [block.content]);
 
   // Focus control
-  useEffect(() => {
-    if (focusId === block.id) {
-      inputRef.current?.focus();
+ useEffect(() => {
+  if (focusId === block.id) {
+    const el = inputRef.current;
+    el?.focus();
+
+    // Solo mover el cursor al final si es la primera vez que se hace foco (foco programático)
+    if (el && !isProgrammaticFocus.current) {
+      isProgrammaticFocus.current = true;
+      const range = document.createRange();
+      const selection = window.getSelection();
+
+      range.selectNodeContents(el);
+      range.collapse(false);
+
+      selection.removeAllRanges();
+      selection.addRange(range);
     }
-  }, [focusId, block.id]);
+  } else {
+    // Resetear cuando pierde el foco
+    isProgrammaticFocus.current = false;
+  }
+}, [focusId, block.id]);
 
   useEffect(() => {
     if (focusId === block.id) {

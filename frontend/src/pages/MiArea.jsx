@@ -8,7 +8,8 @@ import CreateButton from "../components/CreateButton.jsx";
 import CrearElemento from "../modals/CrearElemento.jsx";
 import EditElemento from "../modals/EditElemento.jsx";
 import DeleteElemento from "../modals/DeleteElemento.jsx";
-
+import { cacheService } from "../services/cacheService.js"; // Añadido para guardar docs
+import { documentoApiService } from "../services/documentoApiService.js";
 export default function MiArea() {
   const { UserId, seccion, '*': subRuta } = useParams();
   const carpetaActualId = subRuta ? subRuta.split('/').pop() : null;
@@ -21,8 +22,7 @@ export default function MiArea() {
 
   if (!SECCIONES_VALIDAS.includes(seccion)) { return <div className="General">Sección no encontrada</div>; }
 
-  const { carpetaActual, componentes, cargando, error, crearCarpeta, actualizarCarpeta, eliminarCarpeta } = useArea(UserId, seccion, carpetaActualId);
-
+  const { carpetaActual, componentes, cargando, error, crearCarpeta, actualizarCarpeta, eliminarCarpeta, cargar } = useArea(UserId, seccion, carpetaActualId);
   if (cargando) return <div className="General">Cargando...</div>;
   if (error) return <div className="General">Error: {error}</div>;
 
@@ -31,7 +31,7 @@ export default function MiArea() {
     children: componentes,
   };
 
-  const handleAbrirCrear = (tipo) => {setModalCrear({ abierto: true, tipo });};
+  const handleAbrirCrear = (tipo) => { setModalCrear({ abierto: true, tipo }); };
 
   const handleConfirmarCrear = async (tipo, nombre) => {
     setModalCrear({ abierto: false, tipo: 'carpeta' });
@@ -41,14 +41,56 @@ export default function MiArea() {
       if (tipo === 'carpeta') {
         await crearCarpeta(carpetaActual.id, nombre);
       } else {
-        console.log(`Lógica de creación de documento '${nombre}' lista para conectar.`);
+        const docBackend = await documentoApiService.create(carpetaActual.id, nombre, UserId);
+        const nuevoDocId = docBackend?.id || docBackend?.idDocumento || crypto.randomUUID();
+
+        const nuevoDocumento = {
+          id: nuevoDocId,
+          title: nombre,
+          createdAt: Date.now(),
+          blocks: [
+            {
+              id: crypto.randomUUID(),
+              type: 'paragraph',
+              content: '',
+              metadata: {}
+            }
+          ]
+        };
+        await cacheService.save(nuevoDocumento);
+        await cargar();
+        window.open(`/document/${nuevoDocId}`, "_blank");
       }
     } catch (err) {
       console.error("Error en persistencia de creación:", err.message);
     }
   };
 
-  const handleAbrirEditar = (file) => {setModalEdit({abierto: true,elemento: file});};
+  const handleAbrirEditar = (file) => { setModalEdit({ abierto: true, elemento: file }); };
+
+
+  const handleAbrirEliminar = (file) => { setModalDelete({ abierto: true, elemento: file }); };
+
+const handleConfirmarEliminar = async (file) => {
+    const idElemento = file.id ?? file.documentId;
+    setModalDelete({ abierto: false, elemento: null });
+
+    if (!idElemento) return;
+
+    try {
+      // 1. Identificamos si es una carpeta o un documento
+      const tipo = String(file.tipo ?? file.type ?? "folder").toLowerCase();
+      
+      if (tipo === "documento" || tipo === "document") {
+        await documentoApiService.eliminar(idElemento, UserId);
+        await cargar(); 
+      } else {
+        await eliminarCarpeta(idElemento);
+      }
+    } catch (err) {
+      console.error("Error en eliminación:", err.message);
+    }
+  };
 
   const handleConfirmarEditar = async (file, nuevoNombre) => {
     const idElemento = file.id ?? file.documentId;
@@ -59,25 +101,16 @@ export default function MiArea() {
     const nombreActual = file.nombre ?? file.name ?? "";
     if (nuevoNombre !== nombreActual) {
       try {
-        await actualizarCarpeta(idElemento, nuevoNombre, file.ReadMe || file.readme || "");
+        const tipo = String(file.tipo ?? file.type ?? "folder").toLowerCase();
+        
+        if (tipo === "documento" || tipo === "document") {
+          alert("Para cambiar el nombre de un documento, haz clic en él para abrirlo y modifícalo directamente en el editor superior.");
+        } else {
+          await actualizarCarpeta(idElemento, nuevoNombre, file.ReadMe || file.readme || "");
+        }
       } catch (err) {
         console.error("Error en actualización de nombre:", err.message);
       }
-    }
-  };
-
-  const handleAbrirEliminar = (file) => { setModalDelete({ abierto: true, elemento: file }); };
-
-  const handleConfirmarEliminar = async (file) => {
-    const idElemento = file.id ?? file.documentId;
-    setModalDelete({ abierto: false, elemento: null });
-
-    if (!idElemento) return;
-
-    try {
-      await eliminarCarpeta(idElemento);
-    } catch (err) {
-      console.error("Error en eliminación física:", err.message);
     }
   };
 
@@ -105,13 +138,13 @@ export default function MiArea() {
         />
       )}
 
-      <CreateButton onAbrirCrear={handleAbrirCrear} />
+      <CreateButton onAbrirCreacion={handleAbrirCrear} />
 
       <CrearElemento
         isOpen={modalCrear.abierto}
         tipoInicial={modalCrear.tipo}
         onClose={() => setModalCrear({ abierto: false, tipo: 'carpeta' })}
-        onConfirm={handleConfirmarCrear}
+        onCreate={handleConfirmarCrear}
       />
 
       <EditElemento

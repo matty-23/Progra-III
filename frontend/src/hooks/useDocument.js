@@ -10,7 +10,6 @@ import {
     flattenTree,
     indentBlock as indentBlockFn,
 } from '../utils/Utiles';
-
 const DOC_INICIAL = {
     title: 'Mi Documento',
     createdAt: Date.now(),
@@ -39,14 +38,12 @@ export const useDocument = (documentId) => {
         cargar();
     }, [documentId]);
 
-    // GUARDADO — esto es lo nuevo
-    const guardarDoc = useCallback(async (docActual) => {
-        await cacheService.save(docActual);
-        await syncService.markDirty(docActual.id);
-    }, []);
-
-    const estadoGuardado = useAutoSave(doc, guardarDoc, 3000);
-
+    const updateContent = (id, newContent) => {
+        setDoc(prev => ({
+            ...prev,
+            blocks: updateBlock(prev.blocks, id, { content: newContent }),
+        }));
+    };
 
     const updateMeta = (id, patch) => {
         if (id === 'title') {
@@ -103,8 +100,8 @@ export const useDocument = (documentId) => {
     if (!doc) return { doc: null };
 
 
-    return {
-        doc, estadoGuardado,          
+return {
+        doc,          
         updateContent, updateMeta,
         addChild, addBlockBelow,
         changeType, removeBlock,

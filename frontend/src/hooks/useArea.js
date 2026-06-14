@@ -68,5 +68,5 @@ export function useArea(idUsuario, seccion = "mi-area", carpetaId = null) {
     }
   };
 
-  return { carpetaActual, componentes, cargando, error, crearCarpeta, actualizarCarpeta, eliminarCarpeta };
+return { carpetaActual, componentes, cargando, error, crearCarpeta, actualizarCarpeta, eliminarCarpeta, cargar };
 }
