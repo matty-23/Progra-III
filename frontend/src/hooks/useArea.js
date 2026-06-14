@@ -1,33 +1,72 @@
-import { useEffect, useState } from "react";
-import traerJson from "../domain/archivoService.js";
-import { documentService } from "../domain/documentService.js";
+import { useState, useEffect, useCallback } from "react";
+import { archivoService } from "../services/archivoService.js";
 
-export default async function buscarArchivosporRuta(ruta) {
-  const archivos = buscarElementoPorRuta(await traerJson(), ruta);
-  const store = documentService.getStore();
-  const documentosGuardados = store.documents || [];
- return archivos.map(el => {
-    if (el.type === "document") {
-      const guardado = documentosGuardados.find(d => d.id === el.documentId);
-      return {
-        ...el,
-        name: guardado ? guardado.title : el.name // Si existe, usamos el título nuevo
-      };
+export function useArea(idUsuario, seccion = "mi-area", carpetaId = null) {
+  const [carpetaActual, setCarpetaActual] = useState(null);
+  const [componentes, setComponentes] = useState([]);
+  const [cargando, setCargando] = useState(false);
+  const [error, setError] = useState(null);
+
+  const cargar = useCallback(async () => {
+    if (!idUsuario) return;
+    setCargando(true);
+    try {
+      if (carpetaId) {
+        const carpeta = await archivoService.obtenerCarpeta(carpetaId);
+        const contenido = await archivoService.obtenerContenidoCarpeta(carpetaId); // ← agregar
+        setCarpetaActual(carpeta);
+        setComponentes(contenido || []); // ← cambiar esto
+      } else {
+        const data = await archivoService.obtenerCarpetasPrincipales(idUsuario);
+        const mapa = {
+          "mi-area": data.MiArea || [],
+          "compartidos-conmigo": data.CompartidosConmigo || [],
+          "recientes": data.Recientes || [],
+          "destacados": data.Destacados || [],
+        };
+
+        const raizSeccion = mapa[seccion]?.[0] || null;
+
+        setCarpetaActual(raizSeccion || { nombre: seccion, id: null, ReadMe: "" });
+        setComponentes(raizSeccion?.componentes || []);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setCargando(false);
     }
-    return el;
-  });
-}
+  }, [idUsuario, seccion, carpetaId]);
 
-function buscarElementoPorRuta(root, path) {
-  if (!path) return root.children || [];
-  const segments = path.split("/").filter(Boolean);
-  let current = root;
-  for (let segment of segments) {
-    const children = current.children || [];
-    const found = children.find(el => el.name === segment);
-    if (!found) return [];
-    current = found;
-  }
+  useEffect(() => {
+    cargar();
+  }, [cargar]);
 
-  return current.children || [];
+  const crearCarpeta = async (idPadre, nombre) => {
+    try {
+      await archivoService.crearCarpeta(idPadre, nombre, idUsuario);
+      await cargar();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const actualizarCarpeta = async (idCarpeta, nombre, readme = "") => {
+    try {
+      await archivoService.actualizarCarpeta(idCarpeta, nombre, idUsuario, readme);
+      await cargar();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const eliminarCarpeta = async (idCarpeta) => {
+    try {
+      await archivoService.eliminarCarpeta(idCarpeta, idUsuario);
+      await cargar();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  return { carpetaActual, componentes, cargando, error, crearCarpeta, actualizarCarpeta, eliminarCarpeta };
 }

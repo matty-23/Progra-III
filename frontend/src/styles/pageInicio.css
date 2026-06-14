@@ -6,14 +6,14 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background-color: #1e1f22; /* Fondo oscuro base */
+  background-color: #1e1f22; 
   color: #202124;
 }
 
 .app {
   display: flex; 
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   background-color: #1e1f22;
   overflow: hidden;
 }
@@ -23,19 +23,21 @@ body {
   background-color: #1e1f22; /* El fondo detrás de la hoja blanca */
   display: flex;
   flex-direction: column;
+  min-width: 0; 
 }
-
 
 .content-area {
   flex: 1;
   background-color: #ffffff;
-  border-top-left-radius: 16px; /* La esquina curvada */
-  border-top: 1px solid rgba(255, 255, 255, 0.15); /* Línea blanca finita superior */
-  border-left: 1px solid rgba(255, 255, 255, 0.15); /* Línea blanca finita lateral */
-  padding: 40px 50px; /* Esto empuja las tarjetas para que no choquen a la izquierda */
+  border-top-left-radius: 16px; 
+  border-top: 1px solid rgba(255, 255, 255, 0.15); 
+  border-left: 1px solid rgba(255, 255, 255, 0.15); 
+  padding: 40px 50px; 
   overflow-y: auto;
-  margin-left: 2px; /* Un pequeñísimo margen para que se note el borde */
-  min-height: 0; /* ⚠️ CLAVE: Permite que el hijo flex se encoja y active el scroll */
+  margin-left: 2px;
+  min-height: 0; 
+  min-width: 0; 
+  overflow-x: hidden; 
 }
 
 .title-row {
@@ -44,4 +46,37 @@ body {
   align-items: center;
   margin-top: 10px;
   margin-bottom: 20px;
+}
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.empty-content {
+  max-width: 500px;
+}
+
+.empty-content h2 {
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.empty-content p {
+  color: #777;
+  line-height: 1.5;
+}
+
+.menu-divider {
+  height: 1px;
+  background-color: #f1f3f4;
+  margin: 0;
+}
+
+@keyframes slideMenuUp {
+  from { opacity: 0; transform: translateY(15px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }

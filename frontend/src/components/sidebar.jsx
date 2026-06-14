@@ -4,6 +4,7 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import './Sidebar.css';
 
 export default function Sidebar() {
+  
   const { nameUser, UserId } = useParams();
   const navigate = useNavigate();
   const location = useLocation(); // 1. Obtenemos la URL actual

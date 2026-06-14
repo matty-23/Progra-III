@@ -1,43 +1,48 @@
-import { useEffect, useState } from "react";
 import FileCard from "./FileCard";
 import "./FileGrid.css";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-export default function FileGrid({ data}) {
-
-  const [files, setFiles] = useState([]);
+export default function FileGrid({ data, onEdit, onDelete }) { 
   const navigate = useNavigate();
   const location = useLocation();
-  const currentPath = location.pathname;
 
-  useEffect(() => {
-    if (data?.children) {
-      setFiles(data.children);
-    }
-  }, [data]);
+  const files = data?.children || [];
 
   const handleClick = (file) => {
+    // Normalizamos el tipo a minúsculas
+    const rawType = file.tipo ?? file.type ?? "folder";
+    const tipo = String(rawType).toLowerCase();
+    
+    const nombre = file.nombre ?? file.name;
 
-    if (file.type === "folder") {
-      const newPath = `${currentPath}/${file.name}`.replace("//", "/");
+    if (tipo === "folder" || tipo === "carpeta") {
+      const segmento = file.id ?? nombre;
+      const newPath = `${location.pathname}/${segmento}`.replace("//", "/");
       navigate(newPath);
-    }
-
-    if (file.type === "document") {
-      window.open(`/document/${file.documentId}`, "_blank");
-      
+    } 
+    else if (tipo === "document" || tipo === "documento") {
+      const docId = file.id ?? file.documentId;
+      window.open(`/document/${docId}`, "_blank");
+    } 
+    else {
+      // Si el backend manda algo distinto, lo mostramos en consola para poder depurar
+      console.warn("No se reconoció el tipo de archivo al hacer clic:", tipo, file);
     }
   };
 
-  return (
+ return (
     <div className="grid-container">
       <div className="grid">
-        {files.map((file, i) => (
-          <FileCard key={i} file={file} onClick={handleClick} />
+        {files.map((file) => (
+          <FileCard 
+            key={file.id ?? file.nombre ?? file.name} 
+            file={file} 
+            onClick={handleClick} 
+            onEdit={onEdit}       
+            onDelete={onDelete}
+          />
         ))}
       </div>
-
     </div>
-  );
+  )
 }
