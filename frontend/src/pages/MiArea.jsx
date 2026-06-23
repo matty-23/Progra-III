@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import '../styles/pageInicio.css';
 import FileGrid from "../components/FileGrid.jsx";
@@ -23,6 +23,20 @@ export default function MiArea() {
   if (!SECCIONES_VALIDAS.includes(seccion)) { return <div className="General">Sección no encontrada</div>; }
 
   const { carpetaActual, componentes, cargando, error, crearCarpeta, actualizarCarpeta, eliminarCarpeta, cargar } = useArea(UserId, seccion, carpetaActualId);
+  useEffect(() => {
+    if (carpetaActual?.id && carpetaActual?.nombre) {
+      localStorage.setItem(`folder-${carpetaActual.id}`, carpetaActual.nombre);
+    }
+
+    if (componentes && componentes.length > 0) {
+      componentes.forEach(comp => {
+        const type = String(comp.tipo ?? comp.type ?? "folder").toLowerCase();
+        if ((type === "folder" || type === "carpeta") && comp.id && comp.nombre) {
+          localStorage.setItem(`folder-${comp.id}`, comp.nombre);
+        }
+      });
+    }
+  }, [carpetaActual, componentes]);
   if (cargando) return <div className="General">Cargando...</div>;
   if (error) return <div className="General">Error: {error}</div>;
 
@@ -71,7 +85,7 @@ export default function MiArea() {
 
   const handleAbrirEliminar = (file) => { setModalDelete({ abierto: true, elemento: file }); };
 
-const handleConfirmarEliminar = async (file) => {
+  const handleConfirmarEliminar = async (file) => {
     const idElemento = file.id ?? file.documentId;
     setModalDelete({ abierto: false, elemento: null });
 
@@ -80,10 +94,10 @@ const handleConfirmarEliminar = async (file) => {
     try {
       // 1. Identificamos si es una carpeta o un documento
       const tipo = String(file.tipo ?? file.type ?? "folder").toLowerCase();
-      
+
       if (tipo === "documento" || tipo === "document") {
         await documentoApiService.eliminar(idElemento);
-        await cargar(); 
+        await cargar();
       } else {
         await eliminarCarpeta(idElemento);
       }
@@ -102,7 +116,7 @@ const handleConfirmarEliminar = async (file) => {
     if (nuevoNombre !== nombreActual) {
       try {
         const tipo = String(file.tipo ?? file.type ?? "folder").toLowerCase();
-        
+
         if (tipo === "documento" || tipo === "document") {
           alert("Para cambiar el nombre de un documento, haz clic en él para abrirlo y modifícalo directamente en el editor superior.");
         } else {

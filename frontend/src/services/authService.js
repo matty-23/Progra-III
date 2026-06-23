@@ -28,9 +28,12 @@ export const authApiService = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include', 
-    }).catch(() => {
+    }
+    ).catch(() => {
       console.warn('Error silencioso en el logout del backend');
     });
+    localStorage.removeItem("token");
+    localStorage.removeItem("loggedUser");
   },
 };
 
